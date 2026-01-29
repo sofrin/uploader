@@ -45,91 +45,91 @@ const initialFiles = [
 	},
 ];
 
-// const getFileIcon = (file: { file: File | { type: string; name: string } }) => {
-// 	const fileType = file.file instanceof File ? file.file.type : file.file.type;
-// 	const fileName = file.file instanceof File ? file.file.name : file.file.name;
-
-// 	const iconMap = {
-// 		archive: {
-// 			conditions: (type: string, name: string) =>
-// 				type.includes("zip") ||
-// 				type.includes("archive") ||
-// 				name.endsWith(".zip") ||
-// 				name.endsWith(".rar"),
-// 			icon: FileArchive,
-// 		},
-// 		audio: {
-// 			conditions: (type: string) => type.includes("audio/"),
-// 			icon: HeadphonesIcon,
-// 		},
-// 		excel: {
-// 			conditions: (type: string, name: string) =>
-// 				type.includes("excel") ||
-// 				name.endsWith(".xls") ||
-// 				name.endsWith(".xlsx"),
-// 			icon: File,
-// 		},
-// 		image: {
-// 			conditions: (type: string) => type.startsWith("image/"),
-// 			icon: ImageIcon,
-// 		},
-// 		pdf: {
-// 			conditions: (type: string, name: string) =>
-// 				type.includes("pdf") ||
-// 				name.endsWith(".pdf") ||
-// 				type.includes("word") ||
-// 				name.endsWith(".doc") ||
-// 				name.endsWith(".docx"),
-// 			icon: FileText,
-// 		},
-// 		video: {
-// 			conditions: (type: string) => type.includes("video/"),
-// 			icon: VideoIcon,
-// 		},
-// 	};
-
-// 	for (const { icon: Icon, conditions } of Object.values(iconMap)) {
-// 		if (conditions(fileType, fileName)) {
-// 			return <IconjarIcon className="size-5 opacity-60" />;
-// 		}
-// 	}
-
-// 	return <FilesIcon className="size-5 opacity-60" />;
-// };
-
-const getFilePreview = (file: {
-	file: File | { type: string; name: string; url?: string };
-}) => {
+const getFileIcon = (file: { file: File | { type: string; name: string } }) => {
 	const fileType = file.file instanceof File ? file.file.type : file.file.type;
 	const fileName = file.file instanceof File ? file.file.name : file.file.name;
 
-	const renderImage = (src: string) => (
-		<img
-			alt={fileName}
-			className="size-full rounded-t-[inherit] object-cover"
-			src={src}
-		/>
-	);
+	const iconMap = {
+		archive: {
+			conditions: (type: string, name: string) =>
+				type.includes("zip") ||
+				type.includes("archive") ||
+				name.endsWith(".zip") ||
+				name.endsWith(".rar"),
+			icon: FileArchive,
+		},
+		audio: {
+			conditions: (type: string) => type.includes("audio/"),
+			icon: HeadphonesIcon,
+		},
+		excel: {
+			conditions: (type: string, name: string) =>
+				type.includes("excel") ||
+				name.endsWith(".xls") ||
+				name.endsWith(".xlsx"),
+			icon: File,
+		},
+		image: {
+			conditions: (type: string) => type.startsWith("image/"),
+			icon: ImageIcon,
+		},
+		pdf: {
+			conditions: (type: string, name: string) =>
+				type.includes("pdf") ||
+				name.endsWith(".pdf") ||
+				type.includes("word") ||
+				name.endsWith(".doc") ||
+				name.endsWith(".docx"),
+			icon: FileText,
+		},
+		video: {
+			conditions: (type: string) => type.includes("video/"),
+			icon: VideoIcon,
+		},
+	};
 
-	return (
-		<div className="flex aspect-square items-center justify-center overflow-hidden rounded-t-[inherit] bg-accent">
-			{fileType.startsWith("image/") ? (
-				file.file instanceof File ? (
-					(() => {
-						const previewUrl = URL.createObjectURL(file.file);
-						return renderImage(previewUrl);
-					})()
-				) : file.file.url ? (
-					renderImage(file.file.url)
-				) : (
-					<HugeiconsIcon icon={Album01Icon} className="size-5 opacity-60" />
-				)
-			) : (
-				getFilePreview(file)
-			)}
-		</div>
-	);
+	for (const { icon: Icon, conditions } of Object.values(iconMap)) {
+		if (conditions(fileType, fileName)) {
+			return <IconjarIcon className="size-5 opacity-60" />;
+		}
+	}
+
+	return <FilesIcon className="size-5 opacity-60" />;
 };
+
+// const getFilePreview = (file: {
+// 	file: File | { type: string; name: string; url?: string };
+// }) => {
+// 	const fileType = file.file instanceof File ? file.file.type : file.file.type;
+// 	const fileName = file.file instanceof File ? file.file.name : file.file.name;
+
+// 	const renderImage = (src: string) => (
+// 		<img
+// 			alt={fileName}
+// 			className="size-full rounded-t-[inherit] object-cover"
+// 			src={src}
+// 		/>
+// 	);
+
+// 	return (
+// 		<div className="flex aspect-square items-center justify-center overflow-hidden rounded-t-[inherit] bg-accent">
+// 			{fileType.startsWith("image/") ? (
+// 				file.file instanceof File ? (
+// 					(() => {
+// 						const previewUrl = URL.createObjectURL(file.file);
+// 						return renderImage(previewUrl);
+// 					})()
+// 				) : file.file.url ? (
+// 					renderImage(file.file.url)
+// 				) : (
+// 					<HugeiconsIcon icon={Album01Icon} className="size-5 opacity-60" />
+// 				)
+// 			) : (
+// 				getFilePreview(file)
+// 			)}
+// 		</div>
+// 	);
+// };
 
 // Type for tracking upload progress
 type UploadProgress = {

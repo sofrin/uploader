@@ -1,55 +1,55 @@
 import crypto from "node:crypto";
-import { auth } from "auth";
-import { s3 } from "bun";
-import { db } from "./prisma";
+import { createServerFn } from "@tanstack/react-start";
+// import { auth } from "auth";
+import { S3Client } from "bun";
 
-type GetSignedURLParams = {
-	fileType: string;
-	fileSize: number;
-	checksum: string;
-};
-type SignedURLResponse = Promise<
-	| { failure?: undefined; success: { url: string; id: string } }
-	| { failure: string; success?: undefined }
->;
+const s3 = new S3Client({
+	accessKeyId: process.env.ACCESSKEYID,
+	secretAccessKey: process.env.SECRETACCESSKEY,
+	bucket: process.env.BUCKET,
+	// sessionToken: "..."
+	// acl: "public-read",
+	endpoint: process.env.ENDPOINT,
+});
 
-const generateFileName = (bytes = 10) =>
+const generateFileName = (bytes = 5) =>
 	crypto.randomBytes(bytes).toString("hex");
 
 const maxFileSize = 1048576 * 10;
 
-export const getSignedURL = async ({
-	fileType,
-	fileSize,
-}: GetSignedURLParams): SignedURLResponse => {
-	const session = await auth.api.getSession();
+export const getSignedURL = createServerFn()
+	.inputValidator((data: { fileType: string; fileSize: number }) => data)
+	.handler(async ({ data }) => {
+		// const session = await auth.api.getSession();
 
-	if (!session) {
-		return { failure: "not authenticated" };
-	}
+		// if (!session) {
+		// 	return { failure: "not authenticated" };
+		// }
 
-	if (fileSize > maxFileSize) {
-		return { failure: "File size too large" };
-	}
+		if (data.fileSize > maxFileSize) {
+			return { failure: "File size too large" };
+		}
 
-	const fileName = generateFileName();
-	const uploadUrl = s3.presign(fileName, {
-		expiresIn: 60,
-		method: "PUT",
-		type: fileType,
+		const fileName = generateFileName();
+		console.log("fileName", fileName);
+		const uploadUrl = s3.presign(fileName, {
+			expiresIn: 60,
+			method: "PUT",
+			type: data.fileType,
+			acl: "public-read",
+		});
+
+		console.log({ success: uploadUrl });
+
+		// const results = await db.file.create({
+		// 	data: {
+		// 		name: fileName,
+		// 		size: data.fileSize,
+		// 		id: fileName,
+		// 		type: data.fileType,
+		// 		url: uploadUrl.split("?")[0],
+		// 		user: { connect: { id: session.user.id } },
+		// 	},
+		// });
+		return { success: { url: uploadUrl, id: fileName } };
 	});
-
-	console.log({ success: uploadUrl });
-
-	const results = await db.file.create({
-		data: {
-			name: fileName,
-			size: fileSize,
-			id: fileName,
-			type: fileType,
-			url: uploadUrl.split("?")[0],
-			user: { connect: { id: session.user.id } },
-		},
-	});
-	return { success: { url: uploadUrl, id: results.id } };
-};

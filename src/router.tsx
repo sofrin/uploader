@@ -9,7 +9,6 @@ export const getRouter = () => {
 	const router = createRouter({
 		routeTree,
 		scrollRestoration: true,
-		defaultPreloadStaleTime: 0,
 		Wrap: (props: { children: React.ReactNode }) => {
 			return <Provider>{props.children}</Provider>;
 		},

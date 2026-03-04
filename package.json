@@ -10,7 +10,8 @@
 		"test": "vitest run",
 		"lint": "biome lint",
 		"format": "biome format",
-		"check": "biome check"
+		"check": "biome check",
+		"postinstall": "dotenv -e .env.local -- prisma generate"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.2.0",

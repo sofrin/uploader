@@ -3,6 +3,7 @@ import type { Item } from "@/lib/store.tsx";
 import { useState } from "react";
 
 import { createFileRoute } from "@tanstack/react-router";
+import { Image } from "@unpic/react";
 import { useAtom, useSetAtom } from "jotai";
 import {
 	AlertCircleIcon,
@@ -57,64 +58,73 @@ function SavedFiles() {
 	return (
 		<div className="flex flex-col gap-2">
 			{items.map((item) => (
-				<div key={item.id} className="w0 flex items-end gap-2">
-					<div className="flex size-12 shrink-0 items-center justify-center border bg-background">
-						<ImageIcon className="size-4" />
-					</div>
-					<div className="w-full space-y-1">
-						<Label htmlFor={item.id}>{item.name}</Label>
-						<ButtonGroup className="w-full">
-							<Input
-								className="w-full read-only:bg-muted"
-								defaultValue={`${getUrl()}/${item.id}.${item.ext}`}
-								id={item.id}
-								readOnly
-							/>
-							<CopyButton
-								variant="outline"
-								text={`${getUrl()}/${item.id}.${item.ext}`}
-							/>
-							<Button
-								nativeButton={false}
-								render={
-									<a target="_blank" href={`/${item.id}.${item.ext}`}>
-										<ExternalLinkIcon />
-									</a>
-								}
-							></Button>
+				<div key={item.id} className="w-fit border p-2">
+					<div key={item.id} className="flex items-end gap-2">
+						<div className="space-y-1">
+							<Label htmlFor={item.id}>{item.name}</Label>
+							<ButtonGroup className="">
+								<Input
+									className="w-72 read-only:bg-muted"
+									defaultValue={`${getUrl()}/${item.id}.${item.ext}`}
+									id={item.id}
+									readOnly
+								/>
+								<CopyButton
+									variant="outline"
+									text={`${getUrl()}/${item.id}.${item.ext}`}
+								/>
+								<Button
+									variant="outline"
+									nativeButton={false}
+									render={
+										<a target="_blank" href={`/${item.id}.${item.ext}`}>
+											<ExternalLinkIcon />
+										</a>
+									}
+								></Button>
 
-							<Button
-								size="icon"
-								className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30"
-								variant="outline"
-								onClick={async () => {
-									await fetch(`/api/upload/${item.key}`, {
-										method: "DELETE",
-									}).catch((e) => console.error(e));
-									setItems((prevItems) =>
-										prevItems.filter((i) => i.id !== item.id),
-									);
-								}}
+								<Button
+									size="icon"
+									className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30"
+									variant="outline"
+									onClick={async () => {
+										await fetch(`/api/upload/${item.key}`, {
+											method: "DELETE",
+										}).catch((e) => console.error(e));
+										setItems((prevItems) =>
+											prevItems.filter((i) => i.id !== item.id),
+										);
+									}}
+								>
+									<Trash2Icon />
+								</Button>
+							</ButtonGroup>
+						</div>
+
+						<div style={{ textBoxTrim: "trim-both" }} className="flex flex-col">
+							<p
+								style={{ textBoxTrim: "trim-both" }}
+								className="text-muted-foreground text-sm"
 							>
-								<Trash2Icon />
-							</Button>
-						</ButtonGroup>
+								{new Date(item.date).toLocaleDateString("ru")}
+							</p>
+							<p
+								style={{ textBoxTrim: "trim-both" }}
+								className="text-muted-foreground text-sm"
+							>
+								{item.type}
+							</p>
+						</div>
 					</div>
-
-					<div style={{ textBoxTrim: "trim-both" }} className="flex flex-col">
-						<p
-							style={{ textBoxTrim: "trim-both" }}
-							className="text-muted-foreground text-sm"
-						>
-							{new Date(item.date).toLocaleDateString("ru")}
-						</p>
-						<p
-							style={{ textBoxTrim: "trim-both" }}
-							className="text-muted-foreground text-sm"
-						>
-							{item.type}
-						</p>
-					</div>
+					{item.type.startsWith("image/") ? (
+						<Image
+							className="pt-2"
+							layout="constrained"
+							height={80}
+							width={160}
+							src={`${getUrl()}/${item.id}.${item.ext}`}
+						/>
+					) : null}
 				</div>
 			))}
 		</div>

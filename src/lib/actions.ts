@@ -1,55 +1,64 @@
-import crypto from "node:crypto";
+import { s3 } from "bun";
+
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "better-auth";
 // import { auth } from "auth";
-import { S3Client } from "bun";
+import { customAlphabet, nanoid } from "nanoid";
 
-const s3 = new S3Client({
-	accessKeyId: process.env.ACCESSKEYID,
-	secretAccessKey: process.env.SECRETACCESSKEY,
-	bucket: process.env.BUCKET,
-	// sessionToken: "..."
-	// acl: "public-read",
-	endpoint: process.env.ENDPOINT,
-});
-
-const generateFileName = (bytes = 5) =>
-	crypto.randomBytes(bytes).toString("hex");
-
+const genId = customAlphabet("1234567890abcdef", 6);
 const maxFileSize = 1048576 * 10;
 
-export const getSignedURL = createServerFn()
-	.inputValidator((data: { fileType: string; fileSize: number }) => data)
+export const writeFile = createServerFn()
+	.inputValidator(z.instanceof(FormData))
 	.handler(async ({ data }) => {
-		// const session = await auth.api.getSession();
-
-		// if (!session) {
-		// 	return { failure: "not authenticated" };
-		// }
-
-		if (data.fileSize > maxFileSize) {
-			return { failure: "File size too large" };
+		const file = data.get("file") as File;
+		if (!(file instanceof File))
+			return { status: "failure", reason: "Invalid file" };
+		if (file.size > maxFileSize) {
+			return { status: "failure", reason: "File size too large" };
 		}
 
-		const fileName = generateFileName();
-		console.log("fileName", fileName);
-		const uploadUrl = s3.presign(fileName, {
-			expiresIn: 60,
-			method: "PUT",
-			type: data.fileType,
-			acl: "public-read",
+		const fileKey = nanoid();
+		console.log("fileName", fileKey);
+		console.log("data", data);
+		const s3file = s3.file(fileKey, {
+			type: file.type,
 		});
+		await s3file
+			.write(file, {
+				type: file.type,
+			})
+			.then((res) => {
+				console.log("File written successfully", res);
+			})
+			.catch((err) => {
+				console.error("Error writing file", err);
+			});
 
-		console.log({ success: uploadUrl });
+		return {
+			status: "success",
+			data: {
+				key: fileKey,
+				type: file.type,
+				ext: file.type.split("/")[1].split("+")[0],
+				date: new Date().toISOString(),
+				id: genId(),
+			},
+		};
+	});
 
-		// const results = await db.file.create({
-		// 	data: {
-		// 		name: fileName,
-		// 		size: data.fileSize,
-		// 		id: fileName,
-		// 		type: data.fileType,
-		// 		url: uploadUrl.split("?")[0],
-		// 		user: { connect: { id: session.user.id } },
-		// 	},
-		// });
-		return { success: { url: uploadUrl, id: fileName } };
+export const deleteFile = createServerFn()
+	.inputValidator(z.string())
+	.handler(async ({ data }) => {
+		const fileKey = data;
+		const s3file = s3.file(fileKey);
+		await s3file.delete().catch((err) => {
+			console.error("Error deleting file", err);
+		});
+		return {
+			status: "success",
+			data: {
+				key: fileKey,
+			},
+		};
 	});

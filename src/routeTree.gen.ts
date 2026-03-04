@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IdRouteImport } from './routes/$id'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiUploadKeyRouteImport } from './routes/api/upload/$key'
+import { Route as ApiUploadSplatRouteImport } from './routes/api/upload/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IdRoute = IdRouteImport.update({
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUploadKeyRoute = ApiUploadKeyRouteImport.update({
+  id: '/api/upload/$key',
+  path: '/api/upload/$key',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadSplatRoute = ApiUploadSplatRouteImport.update({
+  id: '/api/upload/$',
+  path: '/api/upload/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -33,30 +45,44 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/upload/$': typeof ApiUploadSplatRoute
+  '/api/upload/$key': typeof ApiUploadKeyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/upload/$': typeof ApiUploadSplatRoute
+  '/api/upload/$key': typeof ApiUploadKeyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/upload/$': typeof ApiUploadSplatRoute
+  '/api/upload/$key': typeof ApiUploadKeyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$id' | '/api/auth/$'
+  fullPaths: '/' | '/$id' | '/api/auth/$' | '/api/upload/$' | '/api/upload/$key'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$id' | '/api/auth/$'
-  id: '__root__' | '/' | '/$id' | '/api/auth/$'
+  to: '/' | '/$id' | '/api/auth/$' | '/api/upload/$' | '/api/upload/$key'
+  id:
+    | '__root__'
+    | '/'
+    | '/$id'
+    | '/api/auth/$'
+    | '/api/upload/$'
+    | '/api/upload/$key'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IdRoute: typeof IdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiUploadSplatRoute: typeof ApiUploadSplatRoute
+  ApiUploadKeyRoute: typeof ApiUploadKeyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +101,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/upload/$key': {
+      id: '/api/upload/$key'
+      path: '/api/upload/$key'
+      fullPath: '/api/upload/$key'
+      preLoaderRoute: typeof ApiUploadKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/upload/$': {
+      id: '/api/upload/$'
+      path: '/api/upload/$'
+      fullPath: '/api/upload/$'
+      preLoaderRoute: typeof ApiUploadSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -89,6 +129,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IdRoute: IdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiUploadSplatRoute: ApiUploadSplatRoute,
+  ApiUploadKeyRoute: ApiUploadKeyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

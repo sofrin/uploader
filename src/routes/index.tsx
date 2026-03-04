@@ -24,8 +24,17 @@ import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ButtonGroup } from "@/components/ui/button-group.tsx";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard.ts";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl } from "@/lib/utils.ts";
@@ -42,32 +51,125 @@ type UploadProgress = {
 function App() {
 	return (
 		<ExampleWrapper>
-			<div>
-				<h2 className="pb-2 font-semibold text-3xl tracking-tight">uploader</h2>
+			<h2 className="col-span-2 pb-2 font-semibold text-3xl tracking-tight">
+				uploader
+			</h2>
+
+			<Dialog>
+				<DialogTrigger
+					render={
+						<Button className="col-span-2 w-fit" variant="ghost">
+							Условия использования
+						</Button>
+					}
+				></DialogTrigger>
+				<DialogContent className="min-w-3xl">
+					<DialogHeader>
+						<DialogTitle>Условия использования</DialogTitle>
+						<DialogDescription>
+							Настоящие Условия предоставления услуг («Условия») регулируют ваше
+							использование данного Сервиса.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="no-scrollbar -mx-4 max-h-[80vh] overflow-y-auto px-4">
+						<p className="not-first:mt-6 leading-7">
+							Используя данный сервис, вы соглашаетесь со следующим:
+						</p>
+						<ol className="my-6 ml-6 list-decimal [&>li]:mt-2">
+							<li>
+								<strong>Пользовательский контент:</strong> Мы не несем
+								ответственности за пользовательский контент («Контент»).
+							</li>
+							<li>
+								<strong>Мнения авторов контента:</strong> Загруженный контент
+								отражает исключительно точку зрения пользователя который это
+								загрузил.
+							</li>
+							<li>
+								<strong>Возрастное ограничение:</strong> Данная услуга
+								предназначена для пользователей, достигших 18 лет.
+							</li>
+							<li>
+								<strong>Проверка контента:</strong> Весь контент может быть
+								проверен нами.
+							</li>
+							<li>
+								<strong>Запрещенный контент:</strong> Не размещайте незаконный
+								или вредоносный контент.
+							</li>
+							<li>
+								<strong>Ответственность:</strong> Вы несете ответственность за
+								контент, который вы предоставляете, и за любой причиненный в
+								результате этого вред.
+							</li>
+							<li>
+								<strong>Изменение и удаление контента:</strong> Мы можем удалять
+								или изменять контент в любое время.
+							</li>
+							<li>
+								<strong>Коммерческое использование:</strong> требуется
+								разрешение на коммерческое использование третьими лицами. для
+								коммерческого использования третьими лицами.
+							</li>
+							<li>
+								<strong>Прекращение действия:</strong> Мы можем прекратить ваш
+								доступ в любое время.
+							</li>
+						</ol>
+						<p className="not-first:mt-6 leading-7">
+							Использование вами Сервиса подразумевает принятие вами настоящих
+							Условийи.
+						</p>
+						<p className="not-first:mt-6 leading-7">
+							Мы оставляем за собой право вносить изменения в настоящие Условия
+							в любое время без предварительного уведомления.
+						</p>
+						<p className="not-first:mt-6 leading-7">
+							<strong>Контакт: request@sofrin.ru</strong>
+						</p>
+						<p className="not-first:mt-6 leading-7">
+							<strong>Последнее обновление: 1 Марта, 2026</strong>
+						</p>
+					</div>
+				</DialogContent>
+			</Dialog>
+			<div className="col-span-2">
+				<Example className="col-span-2">
+					<FileUploader />
+				</Example>
 			</div>
-			<Example>
-				<FileUploader />
-			</Example>
+			{/*<div className="col-span-2">*/}
 			<SavedFiles />
+			{/*</div>*/}
 		</ExampleWrapper>
 	);
 }
 
 function SavedFiles() {
 	const [items, setItems] = useAtom(itemsAtom);
+	const { copy } = useCopyToClipboard();
+
 	return (
-		<div className="flex flex-col gap-2">
+		<>
 			{items.map((item) => (
-				<div key={item.id} className="w-fit border p-2">
+				<div key={item.id} className="w-full border p-2">
 					<div key={item.id} className="flex items-end gap-2">
 						<div className="space-y-1">
-							<Label htmlFor={item.id}>{item.name}</Label>
+							<Label
+								className="line-clamp-1 max-w-3xs text-sm"
+								htmlFor={item.id}
+							>
+								{item.name}
+							</Label>
 							<ButtonGroup className="">
 								<Input
 									className="w-72 read-only:bg-muted"
 									defaultValue={`${getUrl()}/${item.id}.${item.ext}`}
 									id={item.id}
 									readOnly
+									onClick={() => {
+										copy(`${getUrl()}/${item.id}.${item.ext}`);
+									}}
 								/>
 								<CopyButton
 									variant="outline"
@@ -117,17 +219,20 @@ function SavedFiles() {
 						</div>
 					</div>
 					{item.type.startsWith("image/") ? (
-						<Image
-							className="pt-2"
-							layout="constrained"
-							height={80}
-							width={160}
-							src={`${getUrl()}/${item.id}.${item.ext}`}
-						/>
+						<a href={`${getUrl()}/${item.id}.${item.ext}`} target="_blank">
+							<Image
+								background="auto"
+								className="w-full pt-2"
+								layout="constrained"
+								height={80}
+								width={160}
+								src={`${getUrl()}/${item.id}.${item.ext}`}
+							/>
+						</a>
 					) : null}
 				</div>
 			))}
-		</div>
+		</>
 	);
 }
 

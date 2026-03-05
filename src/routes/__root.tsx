@@ -57,6 +57,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html lang="ru" suppressHydrationWarning>
 			<head>
 				<HeadContent />
+				<script
+					defer
+					src="https://cloud.umami.is/script.js"
+					data-website-id="48c82926-f298-4714-92d6-1c94eed9fe34"
+				></script>
 			</head>
 			<body>
 				{children}

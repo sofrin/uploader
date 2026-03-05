@@ -152,7 +152,7 @@ function SavedFiles() {
 	return (
 		<>
 			{items.map((item) => (
-				<div key={item.id} className="w-full border p-2">
+				<div key={item.id} className="flex w-full flex-col border p-2">
 					<div key={item.id} className="flex items-end gap-2">
 						<div className="space-y-1">
 							<Label
@@ -219,10 +219,13 @@ function SavedFiles() {
 						</div>
 					</div>
 					{item.type.startsWith("image/") ? (
-						<a href={`${getUrl()}/${item.id}.${item.ext}`} target="_blank">
+						<a
+							className="w-40"
+							href={`${getUrl()}/${item.id}.${item.ext}`}
+							target="_blank"
+						>
 							<Image
-								background="auto"
-								className="w-full pt-2"
+								className="bg-cover object-cover pt-2"
 								layout="constrained"
 								height={80}
 								width={160}

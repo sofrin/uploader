@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IdRouteImport } from './routes/$id'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiStatsRouteImport } from './routes/api/stats'
+import { Route as ApiStatsDotjsRouteImport } from './routes/api/stats[.]js'
 import { Route as ApiUploadKeyRouteImport } from './routes/api/upload/$key'
 import { Route as ApiUploadSplatRouteImport } from './routes/api/upload/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -26,9 +26,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiStatsRoute = ApiStatsRouteImport.update({
-  id: '/api/stats',
-  path: '/api/stats',
+const ApiStatsDotjsRoute = ApiStatsDotjsRouteImport.update({
+  id: '/api/stats.js',
+  path: '/api/stats.js',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUploadKeyRoute = ApiUploadKeyRouteImport.update({
@@ -50,7 +50,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
-  '/api/stats': typeof ApiStatsRoute
+  '/api/stats.js': typeof ApiStatsDotjsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/upload/$': typeof ApiUploadSplatRoute
   '/api/upload/$key': typeof ApiUploadKeyRoute
@@ -58,7 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
-  '/api/stats': typeof ApiStatsRoute
+  '/api/stats.js': typeof ApiStatsDotjsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/upload/$': typeof ApiUploadSplatRoute
   '/api/upload/$key': typeof ApiUploadKeyRoute
@@ -67,7 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$id': typeof IdRoute
-  '/api/stats': typeof ApiStatsRoute
+  '/api/stats.js': typeof ApiStatsDotjsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/upload/$': typeof ApiUploadSplatRoute
   '/api/upload/$key': typeof ApiUploadKeyRoute
@@ -77,7 +77,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$id'
-    | '/api/stats'
+    | '/api/stats.js'
     | '/api/auth/$'
     | '/api/upload/$'
     | '/api/upload/$key'
@@ -85,7 +85,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$id'
-    | '/api/stats'
+    | '/api/stats.js'
     | '/api/auth/$'
     | '/api/upload/$'
     | '/api/upload/$key'
@@ -93,7 +93,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$id'
-    | '/api/stats'
+    | '/api/stats.js'
     | '/api/auth/$'
     | '/api/upload/$'
     | '/api/upload/$key'
@@ -102,7 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IdRoute: typeof IdRoute
-  ApiStatsRoute: typeof ApiStatsRoute
+  ApiStatsDotjsRoute: typeof ApiStatsDotjsRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiUploadSplatRoute: typeof ApiUploadSplatRoute
   ApiUploadKeyRoute: typeof ApiUploadKeyRoute
@@ -124,11 +124,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/stats': {
-      id: '/api/stats'
-      path: '/api/stats'
-      fullPath: '/api/stats'
-      preLoaderRoute: typeof ApiStatsRouteImport
+    '/api/stats.js': {
+      id: '/api/stats.js'
+      path: '/api/stats.js'
+      fullPath: '/api/stats.js'
+      preLoaderRoute: typeof ApiStatsDotjsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/upload/$key': {
@@ -158,7 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IdRoute: IdRoute,
-  ApiStatsRoute: ApiStatsRoute,
+  ApiStatsDotjsRoute: ApiStatsDotjsRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiUploadSplatRoute: ApiUploadSplatRoute,
   ApiUploadKeyRoute: ApiUploadKeyRoute,

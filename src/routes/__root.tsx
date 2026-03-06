@@ -59,7 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 				<script
 					defer
-					src="/api/stats"
+					src="/api/stats.js"
 					data-website-id="48c82926-f298-4714-92d6-1c94eed9fe34"
 				></script>
 			</head>

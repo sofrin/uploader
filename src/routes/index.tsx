@@ -192,10 +192,13 @@ function SavedFiles() {
 									onClick={async () => {
 										await fetch(`/api/upload/${item.key}`, {
 											method: "DELETE",
-										}).catch((e) => console.error(e));
-										setItems((prevItems) =>
-											prevItems.filter((i) => i.id !== item.id),
-										);
+										})
+											.then(() =>
+												setItems((prevItems) =>
+													prevItems.filter((i) => i.id !== item.id),
+												),
+											)
+											.catch((e) => console.error(e));
 									}}
 								>
 									<Trash2Icon />

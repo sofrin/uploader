@@ -1,6 +1,6 @@
 import type { FileWithPreview } from "@/hooks/use-file-upload.ts";
 import type { Item } from "@/lib/store.tsx";
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 import { createFileRoute } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
@@ -245,7 +245,26 @@ function FileUploader() {
 	// State to track upload progress for each file
 	const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
 	console.log("Upload progress:", uploadProgress);
-
+	const onPaste = useEffectEvent((e: ClipboardEvent) => {
+		if (!e.clipboardData?.files.length) {
+			return;
+		}
+		handleFilesAdded(
+			Array.from(e.clipboardData.files).map((file) => ({
+				file,
+				id: file.name,
+			})),
+		);
+	});
+	useEffect(() => {
+		document.addEventListener("paste", (e) => {
+			e.preventDefault();
+			onPaste(e);
+		});
+		return () => {
+			document.removeEventListener("paste", onPaste);
+		};
+	}, []);
 	// Function to handle file upload to server
 	const uploadFileToServer = async (file: FileWithPreview): Promise<Item> => {
 		return new Promise((resolve, reject) => {

@@ -19,6 +19,7 @@ import {
 	VideoIcon,
 	XIcon,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
@@ -58,7 +59,7 @@ function App() {
 			<Dialog>
 				<DialogTrigger
 					render={
-						<Button className="col-span-2 w-fit" variant="ghost">
+						<Button className="col-span-2 w-fit px-0" variant="ghost">
 							Условия использования
 						</Button>
 					}
@@ -150,9 +151,16 @@ function SavedFiles() {
 	const { copy } = useCopyToClipboard();
 
 	return (
-		<>
+		<AnimatePresence>
 			{items.map((item) => (
-				<div key={item.id} className="flex w-full flex-col border p-2">
+				<motion.div
+					exit={{ opacity: 0 }}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					layout
+					key={item.id}
+					className="col-span-1 flex w-full flex-col border p-2"
+				>
 					<div key={item.id} className="flex items-end gap-2">
 						<div className="space-y-1">
 							<Label
@@ -161,9 +169,10 @@ function SavedFiles() {
 							>
 								{item.name}
 							</Label>
+
 							<ButtonGroup className="">
 								<Input
-									className="w-72 read-only:bg-muted"
+									className="w-72 text-muted-foreground read-only:bg-muted"
 									defaultValue={`${getUrl()}/${item.id}.${item.ext}`}
 									id={item.id}
 									readOnly
@@ -236,9 +245,9 @@ function SavedFiles() {
 							/>
 						</a>
 					) : null}
-				</div>
+				</motion.div>
 			))}
-		</>
+		</AnimatePresence>
 	);
 }
 
@@ -399,9 +408,9 @@ function FileUploader() {
 	] = useFileUpload({
 		multiple: true,
 		maxSize,
+		maxFiles: 10,
 		onFilesAdded: handleFilesAdded,
 	});
-
 	return (
 		<div className="flex flex-col gap-2">
 			{/* Drop area */}
@@ -419,138 +428,159 @@ function FileUploader() {
 					className="sr-only"
 					aria-label="Upload image file"
 				/>
-				{files.length > 0 ? (
-					<div className="flex w-full flex-col gap-3">
-						<div className="flex items-center justify-end gap-2">
-							<div className="flex gap-2">
-								<Button variant="outline" size="sm" onClick={openFileDialog}>
-									<UploadIcon
-										className="-ms-0.5 size-3.5 opacity-60"
-										aria-hidden="true"
-									/>
-									Добавить файлы
-								</Button>
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => {
-										// Clear all progress tracking
-										setUploadProgress([]);
-										clearFiles();
-									}}
-								>
-									<Trash2Icon
-										className="-ms-0.5 size-3.5 opacity-60"
-										aria-hidden="true"
-									/>
-									Удалить всё
-								</Button>
+				<AnimatePresence>
+					{files.length > 0 ? (
+						<div className="flex w-full flex-col gap-3">
+							<div className="flex items-center justify-end gap-2">
+								<div className="flex gap-2">
+									<Button variant="outline" size="sm" onClick={openFileDialog}>
+										<UploadIcon
+											className="-ms-0.5 size-3.5 opacity-60"
+											aria-hidden="true"
+										/>
+										Добавить файлы
+									</Button>
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() => {
+											// Clear all progress tracking
+											setUploadProgress([]);
+											clearFiles();
+										}}
+									>
+										<Trash2Icon
+											className="-ms-0.5 size-3.5 opacity-60"
+											aria-hidden="true"
+										/>
+										Удалить всё
+									</Button>
+								</div>
+							</div>
+
+							<div className="w-full space-y-2">
+								<AnimatePresence>
+									{files.map((file) => {
+										const fileProgress = uploadProgress.find(
+											(p) => p.fileId === file.file.name,
+										);
+										const isUploading = fileProgress && !fileProgress.completed;
+										console.log("fileProgress:", fileProgress);
+										console.log("isUploading:", isUploading);
+										return (
+											<motion.div
+												exit={{ opacity: 0 }}
+												initial={{ opacity: 0 }}
+												animate={{ opacity: 1 }}
+												layout
+												key={file.id}
+												data-uploading={isUploading || undefined}
+												className="flex flex-col gap-1 rounded-lg border bg-background p-2 pe-3 transition-opacity duration-300"
+											>
+												<div className="flex items-center justify-between gap-2">
+													<div className="flex items-center gap-3 overflow-hidden in-data-[uploading=true]:opacity-50">
+														<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded border">
+															{getFileIcon(file)}
+														</div>
+														<div className="flex min-w-0 flex-col gap-0.5">
+															<p className="truncate font-medium text-[13px]">
+																{file.file instanceof File
+																	? file.file.name
+																	: file.file.name}
+															</p>
+															<p className="text-muted-foreground text-xs">
+																{formatBytes(
+																	file.file instanceof File
+																		? file.file.size
+																		: file.file.size,
+																)}
+															</p>
+														</div>
+													</div>
+													<Button
+														size="icon"
+														variant="ghost"
+														className="-me-2 size-8 text-muted-foreground/80 hover:bg-transparent hover:text-foreground"
+														onClick={() => {
+															handleFileRemoved(file.id);
+															removeFile(file.id);
+														}}
+														aria-label="Remove file"
+													>
+														<XIcon className="size-4" aria-hidden="true" />
+													</Button>
+												</div>
+
+												{/* Upload progress bar */}
+												{fileProgress &&
+													(() => {
+														const progress = fileProgress.progress || 0;
+														const completed = fileProgress.completed || false;
+
+														if (completed) return null;
+
+														return (
+															<div className="mt-1 flex items-center gap-2">
+																<div className="h-1.5 w-full overflow-hidden rounded-full bg-accent-foreground">
+																	<div
+																		className="h-full bg-accent-foreground transition-all duration-300 ease-out"
+																		style={{ width: `${progress}%` }}
+																	/>
+																</div>
+																<span className="w-10 text-muted-foreground text-xs tabular-nums">
+																	{progress}%
+																</span>
+															</div>
+														);
+													})()}
+											</motion.div>
+										);
+									})}
+								</AnimatePresence>
 							</div>
 						</div>
-
-						<div className="w-full space-y-2">
-							{files.map((file) => {
-								const fileProgress = uploadProgress.find(
-									(p) => p.fileId === file.file.name,
-								);
-								const isUploading = fileProgress && !fileProgress.completed;
-								console.log("fileProgress:", fileProgress);
-								console.log("isUploading:", isUploading);
-								return (
-									<div
-										key={file.id}
-										data-uploading={isUploading || undefined}
-										className="flex flex-col gap-1 rounded-lg border bg-background p-2 pe-3 transition-opacity duration-300"
-									>
-										<div className="flex items-center justify-between gap-2">
-											<div className="flex items-center gap-3 overflow-hidden in-data-[uploading=true]:opacity-50">
-												<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded border">
-													{getFileIcon(file)}
-												</div>
-												<div className="flex min-w-0 flex-col gap-0.5">
-													<p className="truncate font-medium text-[13px]">
-														{file.file instanceof File
-															? file.file.name
-															: file.file.name}
-													</p>
-													<p className="text-muted-foreground text-xs">
-														{formatBytes(
-															file.file instanceof File
-																? file.file.size
-																: file.file.size,
-														)}
-													</p>
-												</div>
-											</div>
-											<Button
-												size="icon"
-												variant="ghost"
-												className="-me-2 size-8 text-muted-foreground/80 hover:bg-transparent hover:text-foreground"
-												onClick={() => {
-													handleFileRemoved(file.id);
-													removeFile(file.id);
-												}}
-												aria-label="Remove file"
-											>
-												<XIcon className="size-4" aria-hidden="true" />
-											</Button>
-										</div>
-
-										{/* Upload progress bar */}
-										{fileProgress &&
-											(() => {
-												const progress = fileProgress.progress || 0;
-												const completed = fileProgress.completed || false;
-
-												if (completed) return null;
-
-												return (
-													<div className="mt-1 flex items-center gap-2">
-														<div className="h-1.5 w-full overflow-hidden rounded-full bg-accent-foreground">
-															<div
-																className="h-full bg-accent-foreground transition-all duration-300 ease-out"
-																style={{ width: `${progress}%` }}
-															/>
-														</div>
-														<span className="w-10 text-muted-foreground text-xs tabular-nums">
-															{progress}%
-														</span>
-													</div>
-												);
-											})()}
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				) : (
-					<div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-						<div
-							className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border bg-background"
-							aria-hidden="true"
+					) : (
+						<motion.div
+							exit={{ opacity: 0 }}
+							layout
+							className="flex flex-col items-center justify-center px-4 py-3 text-center"
 						>
-							<ImageIcon className="size-4 opacity-60" />
-						</div>
-						<p className="mb-1.5 font-medium text-sm">Перетащите файлы сюда</p>
-						<p className="text-muted-foreground text-xs">
-							{/*Max {maxFiles} files ∙ Up to {maxSizeMB}MB*/}
-						</p>
-						<Button variant="outline" className="mt-4" onClick={openFileDialog}>
-							<UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
-							Выберите файлы
-						</Button>
-					</div>
-				)}
+							<div
+								className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border bg-background"
+								aria-hidden="true"
+							>
+								<ImageIcon className="size-4 opacity-60" />
+							</div>
+							<p className="mb-1.5 font-medium text-sm">
+								Перетащите файлы сюда
+							</p>
+							<p className="text-muted-foreground text-xs">
+								Максимум 10 ∙ До 100 MB
+							</p>
+							<p className="text-muted-foreground text-xs">
+								Загрузки автоматически удаляются через 15 дней
+							</p>
+							<Button
+								variant="outline"
+								className="mt-4"
+								onClick={openFileDialog}
+							>
+								<UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
+								Выберите файлы
+							</Button>
+						</motion.div>
+					)}
+				</AnimatePresence>
 			</div>
 
 			{errors.length > 0 && (
-				<div
+				<motion.div
 					className="flex items-center gap-1 text-destructive text-xs"
 					role="alert"
 				>
 					<AlertCircleIcon className="size-3 shrink-0" />
 					<span>{errors[0]}</span>
-				</div>
+				</motion.div>
 			)}
 		</div>
 	);

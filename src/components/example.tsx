@@ -6,7 +6,7 @@ function ExampleWrapper({ className, ...props }: React.ComponentProps<"div">) {
 			<div
 				data-slot="example-wrapper"
 				className={cn(
-					"mx-auto grid min-h-screen w-full min-w-0 max-w-5xl content-start items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 md:gap-8 lg:p-12 2xl:max-w-6xl",
+					"mx-auto grid min-h-screen w-full min-w-0 max-w-5xl grid-cols-[1fr_1fr] content-start items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 md:gap-8 lg:p-12 2xl:max-w-6xl",
 
 					className,
 				)}

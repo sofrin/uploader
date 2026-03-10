@@ -19,7 +19,7 @@ import {
 	VideoIcon,
 	XIcon,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
@@ -134,14 +134,16 @@ function App() {
 					</div>
 				</DialogContent>
 			</Dialog>
-			<div className="col-span-2">
-				<Example className="col-span-2">
-					<FileUploader />
-				</Example>
-			</div>
-			{/*<div className="col-span-2">*/}
-			<SavedFiles />
-			{/*</div>*/}
+			<MotionConfig transition={{ type: "spring", bounce: 0.05 }}>
+				<div className="col-span-2">
+					<Example className="col-span-2">
+						<FileUploader />
+					</Example>
+				</div>
+				{/*<div className="col-span-2">*/}
+				<SavedFiles />
+				{/*</div>*/}
+			</MotionConfig>
 		</ExampleWrapper>
 	);
 }
@@ -151,7 +153,7 @@ function SavedFiles() {
 	const { copy } = useCopyToClipboard();
 
 	return (
-		<AnimatePresence>
+		<AnimatePresence mode="popLayout">
 			{items.map((item) => (
 				<motion.div
 					exit={{ opacity: 0 }}
@@ -428,7 +430,7 @@ function FileUploader() {
 					className="sr-only"
 					aria-label="Upload image file"
 				/>
-				<AnimatePresence>
+				<AnimatePresence initial={false}>
 					{files.length > 0 ? (
 						<div className="flex w-full flex-col gap-3">
 							<div className="flex items-center justify-end gap-2">
@@ -459,7 +461,7 @@ function FileUploader() {
 							</div>
 
 							<div className="w-full space-y-2">
-								<AnimatePresence>
+								<AnimatePresence mode="popLayout">
 									{files.map((file) => {
 										const fileProgress = uploadProgress.find(
 											(p) => p.fileId === file.file.name,

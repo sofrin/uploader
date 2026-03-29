@@ -190,7 +190,11 @@ function SavedFiles() {
 									variant="outline"
 									nativeButton={false}
 									render={
-										<a target="_blank" href={`/${item.id}.${item.ext}`}>
+										<a
+											target="_blank"
+											href={`/${item.id}.${item.ext}`}
+											rel="noopener"
+										>
 											<ExternalLinkIcon />
 										</a>
 									}
@@ -237,6 +241,7 @@ function SavedFiles() {
 							className="w-40"
 							href={`${getUrl()}/${item.id}.${item.ext}`}
 							target="_blank"
+							rel="noopener"
 						>
 							<Image
 								className="bg-cover object-cover pt-2"

@@ -19,7 +19,7 @@ import {
 	VideoIcon,
 	XIcon,
 } from "lucide-react";
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
@@ -134,16 +134,14 @@ function App() {
 					</div>
 				</DialogContent>
 			</Dialog>
-			<MotionConfig transition={{ type: "spring", bounce: 0.05 }}>
-				<div className="col-span-2">
-					<Example className="col-span-2">
-						<FileUploader />
-					</Example>
-				</div>
-				{/*<div className="col-span-2">*/}
-				<SavedFiles />
-				{/*</div>*/}
-			</MotionConfig>
+			<div className="col-span-2">
+				<Example className="col-span-2">
+					<FileUploader />
+				</Example>
+			</div>
+			{/*<div className="col-span-2">*/}
+			<SavedFiles />
+			{/*</div>*/}
 		</ExampleWrapper>
 	);
 }

@@ -151,7 +151,7 @@ function SavedFiles() {
 	const { copy } = useCopyToClipboard();
 
 	return (
-		<AnimatePresence mode="popLayout">
+		<AnimatePresence>
 			{items.map((item) => (
 				<motion.div
 					exit={{ opacity: 0 }}
@@ -159,31 +159,23 @@ function SavedFiles() {
 					animate={{ opacity: 1 }}
 					layout
 					key={item.id}
-					className="col-span-1 flex w-full flex-col border p-2"
+					className="fade-in col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
 				>
 					<div key={item.id} className="flex items-end gap-2">
 						<div className="space-y-1">
-							<Label
-								className="line-clamp-1 max-w-3xs text-sm"
-								htmlFor={item.id}
-							>
+							<Label className="text-sm" htmlFor={item.id}>
 								{item.name}
 							</Label>
 
 							<ButtonGroup className="">
-								<Input
-									className="w-72 text-muted-foreground read-only:bg-muted"
-									defaultValue={`${getUrl()}/${item.id}.${item.ext}`}
-									id={item.id}
-									readOnly
-									onClick={() => {
-										copy(`${getUrl()}/${item.id}.${item.ext}`);
-									}}
-								/>
 								<CopyButton
+									className="pr-3 pl-2.5 will-change-transform"
 									variant="outline"
+									size="default"
 									text={`${getUrl()}/${item.id}.${item.ext}`}
-								/>
+								>
+									{`${getUrl()}/${item.id}.${item.ext}`}
+								</CopyButton>
 								<Button
 									variant="outline"
 									nativeButton={false}
@@ -216,39 +208,55 @@ function SavedFiles() {
 								>
 									<Trash2Icon />
 								</Button>
+								<div
+									style={{ textBoxTrim: "trim-both" }}
+									className="flex flex-col px-2"
+								>
+									<p
+										style={{ textBoxTrim: "trim-both" }}
+										className="text-muted-foreground text-sm"
+									>
+										{new Date(item.date).toLocaleDateString("ru")}
+									</p>
+									<p
+										style={{ textBoxTrim: "trim-both" }}
+										className="text-muted-foreground text-sm"
+									>
+										{item.type}
+									</p>
+								</div>
 							</ButtonGroup>
-						</div>
-
-						<div style={{ textBoxTrim: "trim-both" }} className="flex flex-col">
-							<p
-								style={{ textBoxTrim: "trim-both" }}
-								className="text-muted-foreground text-sm"
-							>
-								{new Date(item.date).toLocaleDateString("ru")}
-							</p>
-							<p
-								style={{ textBoxTrim: "trim-both" }}
-								className="text-muted-foreground text-sm"
-							>
-								{item.type}
-							</p>
 						</div>
 					</div>
 					{item.type.startsWith("image/") ? (
-						<a
-							className="w-40"
-							href={`${getUrl()}/${item.id}.${item.ext}`}
-							target="_blank"
-							rel="noopener"
-						>
-							<Image
-								className="bg-cover object-cover pt-2"
-								layout="constrained"
-								height={80}
-								width={160}
-								src={`${getUrl()}/${item.id}.${item.ext}`}
-							/>
-						</a>
+						<Image
+							className="w-full bg-cover object-cover"
+							layout="fullWidth"
+							height={80}
+							// width={160}
+							src={`${getUrl()}/${item.id}.${item.ext}`}
+						/>
+					) : null}
+					{item.type.startsWith("video/") ? (
+						<video
+							preload="metadata"
+							controls
+							// loading="lazy"
+							// disablepictureinpicture
+							className="bg-cover object-cover"
+							// type={`video/${item.ext}`}
+							// height={80}
+							// width={160}
+							src={`${getUrl()}/${item.id}.${item.ext}`}
+						/>
+					) : null}
+					{item.type.startsWith("audio/") ? (
+						<audio
+							// loading="lazy"
+							controls
+							preload="metadata"
+							src={`${getUrl()}/${item.id}.${item.ext}`}
+						/>
 					) : null}
 				</motion.div>
 			))}
@@ -561,9 +569,6 @@ function FileUploader() {
 							</p>
 							<p className="text-muted-foreground text-xs">
 								Максимум 10 ∙ До 100 MB
-							</p>
-							<p className="text-muted-foreground text-xs">
-								Загрузки автоматически удаляются через 15 дней
 							</p>
 							<Button
 								variant="outline"

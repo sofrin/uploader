@@ -33,9 +33,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard.ts";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl } from "@/lib/utils.ts";
@@ -148,7 +146,6 @@ function App() {
 
 function SavedFiles() {
 	const [items, setItems] = useAtom(itemsAtom);
-	const { copy } = useCopyToClipboard();
 
 	return (
 		<AnimatePresence>
@@ -163,7 +160,7 @@ function SavedFiles() {
 				>
 					<div key={item.id} className="flex items-end gap-2">
 						<div className="space-y-1">
-							<Label className="text-sm" htmlFor={item.id}>
+							<Label className="line-clamp-1 text-sm" htmlFor={item.id}>
 								{item.name}
 							</Label>
 
@@ -174,7 +171,7 @@ function SavedFiles() {
 									size="default"
 									text={`${getUrl()}/${item.id}.${item.ext}`}
 								>
-									{`${getUrl()}/${item.id}.${item.ext}`}
+									{`${item.id}.${item.ext}`}
 								</CopyButton>
 								<Button
 									variant="outline"

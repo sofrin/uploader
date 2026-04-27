@@ -40,7 +40,7 @@ import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl } from "@/lib/utils.ts";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({ component: App, ssr: false });
 
 type UploadProgress = {
 	fileId: string;

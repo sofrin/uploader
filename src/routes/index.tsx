@@ -23,8 +23,17 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ButtonGroup } from "@/components/ui/button-group.tsx";
+import {
+	Card,
+	CardAction,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card.tsx";
 import {
 	Dialog,
 	DialogContent,
@@ -158,20 +167,55 @@ function SavedFiles() {
 					key={item.id}
 					className="fade-in col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
 				>
-					<div key={item.id} className="flex items-end gap-2">
-						<div className="space-y-1">
-							<Label className="line-clamp-1 text-sm" htmlFor={item.id}>
-								{item.name}
-							</Label>
-
-							<ButtonGroup className="">
+					<Card className="relative mx-auto w-full pt-0">
+						{item.type.startsWith("image/") ? (
+							<Image
+								className="relative z-20 aspect-video w-full object-cover"
+								layout="fullWidth"
+								height={80}
+								// width={160}
+								src={`${getUrl()}/${item.id}.${item.ext}`}
+							/>
+						) : null}
+						{item.type.startsWith("video/") ? (
+							<video
+								preload="metadata"
+								controls
+								// loading="lazy"
+								// disablepictureinpicture
+								className="relative z-20 aspect-video w-full object-cover"
+								// type={`video/${item.ext}`}
+								// height={80}
+								// width={160}
+								src={`${getUrl()}/${item.id}.${item.ext}`}
+							/>
+						) : null}
+						{item.type.startsWith("audio/") ? (
+							<audio
+								className="w-full rounded-none"
+								// loading="lazy"
+								controls
+								preload="metadata"
+								src={`${getUrl()}/${item.id}.${item.ext}`}
+							/>
+						) : null}
+						<CardHeader>
+							<CardAction>
+								<Badge variant="secondary">
+									{new Date(item.date).toLocaleDateString("ru")}
+								</Badge>
+							</CardAction>
+							<CardTitle> {item.name}</CardTitle>
+						</CardHeader>
+						<CardFooter>
+							<ButtonGroup className="flex w-full">
 								<CopyButton
-									className="pr-3 pl-2.5 will-change-transform"
+									className="grow pr-3 pl-2.5 will-change-transform"
 									variant="outline"
 									size="default"
 									text={`${getUrl()}/${item.id}.${item.ext}`}
 								>
-									{`${item.id}.${item.ext}`}
+									{`${getUrl()}/${item.id}.${item.ext}`}
 								</CopyButton>
 								<Button
 									variant="outline"
@@ -205,56 +249,9 @@ function SavedFiles() {
 								>
 									<Trash2Icon />
 								</Button>
-								<div
-									style={{ textBoxTrim: "trim-both" }}
-									className="flex flex-col px-2"
-								>
-									<p
-										style={{ textBoxTrim: "trim-both" }}
-										className="text-muted-foreground text-sm"
-									>
-										{new Date(item.date).toLocaleDateString("ru")}
-									</p>
-									<p
-										style={{ textBoxTrim: "trim-both" }}
-										className="text-muted-foreground text-sm"
-									>
-										{item.type}
-									</p>
-								</div>
 							</ButtonGroup>
-						</div>
-					</div>
-					{item.type.startsWith("image/") ? (
-						<Image
-							className="w-full bg-cover object-cover"
-							layout="fullWidth"
-							height={80}
-							// width={160}
-							src={`${getUrl()}/${item.id}.${item.ext}`}
-						/>
-					) : null}
-					{item.type.startsWith("video/") ? (
-						<video
-							preload="metadata"
-							controls
-							// loading="lazy"
-							// disablepictureinpicture
-							className="bg-cover object-cover"
-							// type={`video/${item.ext}`}
-							// height={80}
-							// width={160}
-							src={`${getUrl()}/${item.id}.${item.ext}`}
-						/>
-					) : null}
-					{item.type.startsWith("audio/") ? (
-						<audio
-							// loading="lazy"
-							controls
-							preload="metadata"
-							src={`${getUrl()}/${item.id}.${item.ext}`}
-						/>
-					) : null}
+						</CardFooter>
+					</Card>
 				</motion.div>
 			))}
 		</AnimatePresence>

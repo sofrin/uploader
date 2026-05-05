@@ -29,7 +29,6 @@ import { ButtonGroup } from "@/components/ui/button-group.tsx";
 import {
 	Card,
 	CardAction,
-	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
@@ -42,7 +41,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl } from "@/lib/utils.ts";

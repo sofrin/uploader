@@ -284,6 +284,9 @@ function FileUploader() {
 	}, []);
 	// Function to handle file upload to server
 	const uploadFileToServer = async (file: FileWithPreview): Promise<Item> => {
+		if (window.umami) {
+			void umami.track("file upload");
+		}
 		return new Promise((resolve, reject) => {
 			try {
 				// Create FormData

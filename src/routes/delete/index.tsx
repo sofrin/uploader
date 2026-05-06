@@ -46,10 +46,8 @@ export const Route = createFileRoute("/delete/")({
 function RouteComponent() {
 	const item = Route.useLoaderData();
 	const navigate = useNavigate();
-	console.log("item", item);
-	const setItems = useSetAtom(itemsAtom);
 	if (!item?.id) {
-		return <div>Item not found {item?.id}</div>;
+		return <div>File not found {item?.id}</div>;
 	}
 	return (
 		<ExampleWrapper>
@@ -106,9 +104,6 @@ function RouteComponent() {
 											method: "DELETE",
 										})
 											.then(async () => {
-												setItems((prevItems) =>
-													prevItems.filter((i) => i.id !== item.id),
-												);
 												toast.success("Файл удалён");
 												await navigate({ to: "/" });
 											})

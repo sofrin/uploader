@@ -60,85 +60,86 @@ function App() {
 			<h2 className="col-span-2 pb-2 font-semibold text-3xl tracking-tight">
 				uploader
 			</h2>
-
-			<Dialog>
-				<DialogTrigger
-					render={
-						<Button className="col-span-2 w-fit px-0" variant="ghost">
-							Условия использования
-						</Button>
-					}
-				></DialogTrigger>
-				<DialogContent className="min-w-3xl">
-					<DialogHeader>
-						<DialogTitle>Условия использования</DialogTitle>
-						<DialogDescription>
-							Настоящие Условия предоставления услуг («Условия») регулируют ваше
-							использование данного Сервиса.
-						</DialogDescription>
-					</DialogHeader>
-					<div className="no-scrollbar -mx-4 max-h-[80vh] overflow-y-auto px-4">
-						<p className="not-first:mt-6 leading-7">
-							Используя данный сервис, вы соглашаетесь со следующим:
-						</p>
-						<ol className="my-6 ml-6 list-decimal [&>li]:mt-2">
-							<li>
-								<strong>Пользовательский контент:</strong> Мы не несем
-								ответственности за пользовательский контент («Контент»).
-							</li>
-							<li>
-								<strong>Мнения авторов контента:</strong> Загруженный контент
-								отражает исключительно точку зрения пользователя который это
-								загрузил.
-							</li>
-							<li>
-								<strong>Возрастное ограничение:</strong> Данная услуга
-								предназначена для пользователей, достигших 18 лет.
-							</li>
-							<li>
-								<strong>Проверка контента:</strong> Весь контент может быть
-								проверен нами.
-							</li>
-							<li>
-								<strong>Запрещенный контент:</strong> Не размещайте незаконный
-								или вредоносный контент.
-							</li>
-							<li>
-								<strong>Ответственность:</strong> Вы несете ответственность за
-								контент, который вы предоставляете, и за любой причиненный в
-								результате этого вред.
-							</li>
-							<li>
-								<strong>Изменение и удаление контента:</strong> Мы можем удалять
-								или изменять контент в любое время.
-							</li>
-							<li>
-								<strong>Коммерческое использование:</strong> требуется
-								разрешение на коммерческое использование третьими лицами. для
-								коммерческого использования третьими лицами.
-							</li>
-							<li>
-								<strong>Прекращение действия:</strong> Мы можем прекратить ваш
-								доступ в любое время.
-							</li>
-						</ol>
-						<p className="not-first:mt-6 leading-7">
-							Использование вами Сервиса подразумевает принятие вами настоящих
-							Условий.
-						</p>
-						<p className="not-first:mt-6 leading-7">
-							Мы оставляем за собой право вносить изменения в настоящие Условия
-							в любое время без предварительного уведомления.
-						</p>
-						<p className="not-first:mt-6 leading-7">
-							<strong>Контакт: request@sofrin.ru</strong>
-						</p>
-						<p className="not-first:mt-6 leading-7">
-							<strong>Последнее обновление: 1 Марта, 2026</strong>
-						</p>
-					</div>
-				</DialogContent>
-			</Dialog>
+			<div className="flex">
+				<Dialog>
+					<DialogTrigger
+						render={
+							<Button className="w-fit" variant="ghost">
+								Условия использования
+							</Button>
+						}
+					></DialogTrigger>
+					<DialogContent className="min-w-3xl">
+						<DialogHeader>
+							<DialogTitle>Условия использования</DialogTitle>
+							<DialogDescription>
+								Настоящие Условия предоставления услуг («Условия») регулируют
+								ваше использование данного Сервиса.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="no-scrollbar -mx-4 max-h-[80vh] overflow-y-auto px-4">
+							<p className="not-first:mt-6 leading-7">
+								Используя данный сервис, вы соглашаетесь со следующим:
+							</p>
+							<ol className="my-6 ml-6 list-decimal [&>li]:mt-2">
+								<li>
+									<strong>Пользовательский контент:</strong> Мы не несем
+									ответственности за пользовательский контент («Контент»).
+								</li>
+								<li>
+									<strong>Мнения авторов контента:</strong> Загруженный контент
+									отражает исключительно точку зрения пользователя который это
+									загрузил.
+								</li>
+								<li>
+									<strong>Возрастное ограничение:</strong> Данная услуга
+									предназначена для пользователей, достигших 18 лет.
+								</li>
+								<li>
+									<strong>Проверка контента:</strong> Весь контент может быть
+									проверен нами.
+								</li>
+								<li>
+									<strong>Запрещенный контент:</strong> Не размещайте незаконный
+									или вредоносный контент.
+								</li>
+								<li>
+									<strong>Ответственность:</strong> Вы несете ответственность за
+									контент, который вы предоставляете, и за любой причиненный в
+									результате этого вред.
+								</li>
+								<li>
+									<strong>Изменение и удаление контента:</strong> Мы можем
+									удалять или изменять контент в любое время.
+								</li>
+								<li>
+									<strong>Коммерческое использование:</strong> требуется
+									разрешение на коммерческое использование третьими лицами. для
+									коммерческого использования третьими лицами.
+								</li>
+								<li>
+									<strong>Прекращение действия:</strong> Мы можем прекратить ваш
+									доступ в любое время.
+								</li>
+							</ol>
+							<p className="not-first:mt-6 leading-7">
+								Использование вами Сервиса подразумевает принятие вами настоящих
+								Условий.
+							</p>
+							<p className="not-first:mt-6 leading-7">
+								Мы оставляем за собой право вносить изменения в настоящие
+								Условия в любое время без предварительного уведомления.
+							</p>
+							<p className="not-first:mt-6 leading-7">
+								<strong>Контакт: request@sofrin.ru</strong>
+							</p>
+							<p className="not-first:mt-6 leading-7">
+								<strong>Последнее обновление: 1 Марта, 2026</strong>
+							</p>
+						</div>
+					</DialogContent>
+				</Dialog>
+			</div>
 			<div className="col-span-2">
 				<Example className="col-span-2">
 					<FileUploader />
@@ -234,7 +235,7 @@ function SavedFiles() {
 									className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30"
 									variant="outline"
 									onClick={async () => {
-										await fetch(`/api/upload/${item.key}`, {
+										await fetch(`/api/file/${item.key}`, {
 											method: "DELETE",
 										})
 											.then(() =>
@@ -362,7 +363,7 @@ function FileUploader() {
 				});
 
 				// Open and send the request
-				xhr.open("POST", "/api/upload/", true);
+				xhr.open("POST", "/api/file/", true);
 				xhr.send(formData);
 			} catch (error) {
 				reject(error);

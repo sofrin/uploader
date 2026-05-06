@@ -50,7 +50,7 @@ export const Route = createRootRoute({
 		],
 	}),
 	shellComponent: RootDocument,
-	ssr: false,
+	// ssr: "data-only",
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

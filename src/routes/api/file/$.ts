@@ -4,13 +4,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { customAlphabet, nanoid } from "nanoid";
 
 import { db } from "@/lib/prisma.ts";
+import { getUrl } from "@/lib/utils.ts";
 
 const maxFileSize = 1048576 * 100;
 const genId = customAlphabet(
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
 	6,
 );
-export const Route = createFileRoute("/api/upload/$")({
+export const Route = createFileRoute("/api/file/$")({
 	server: {
 		handlers: {
 			POST: async ({ request }) => {
@@ -80,6 +81,8 @@ export const Route = createFileRoute("/api/upload/$")({
 				return Response.json(
 					{
 						status: "success",
+						link: `${getUrl()}/${fileId}`,
+						delete: `${getUrl()}/delete?key=${fileKey}`,
 						data: {
 							size: file.size,
 							key: fileKey,

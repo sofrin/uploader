@@ -1,6 +1,9 @@
 import { createRouter } from "@tanstack/react-router";
 import { Provider } from "jotai";
 
+import { ErrorPage } from "./components/error.tsx";
+import { NotFoundPage } from "./components/not-found.tsx";
+import { Toaster } from "./components/ui/sonner.tsx";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen.ts";
 
@@ -9,8 +12,18 @@ export const getRouter = () => {
 	const router = createRouter({
 		routeTree,
 		scrollRestoration: true,
+		defaultViewTransition: true,
+		defaultNotFoundComponent: () => <NotFoundPage />,
+		defaultErrorComponent: ({ error, reset }) => (
+			<ErrorPage error={error} reset={reset} />
+		),
 		Wrap: (props: { children: React.ReactNode }) => {
-			return <Provider>{props.children}</Provider>;
+			return (
+				<Provider>
+					<Toaster richColors />
+					{props.children}
+				</Provider>
+			);
 		},
 	});
 

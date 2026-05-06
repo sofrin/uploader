@@ -2,7 +2,6 @@ import type { Item } from "@/lib/store.tsx";
 
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
-import { useSetAtom } from "jotai";
 import { ExternalLinkIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,7 +18,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card.tsx";
-import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl } from "@/lib/utils.ts";
 
 const deleteFileSearchSchema = z.object({

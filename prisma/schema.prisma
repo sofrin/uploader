@@ -90,6 +90,6 @@ model File {
   ext       String
   name      String
 
-  @@index([id])
+  @@index([id, key])
   @@map("file")
 }

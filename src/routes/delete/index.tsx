@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
+import { NotFoundPage } from "@/components/not-found.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ButtonGroup } from "@/components/ui/button-group.tsx";
@@ -45,7 +46,13 @@ function RouteComponent() {
 	const item = Route.useLoaderData();
 	const navigate = useNavigate();
 	if (!item?.id) {
-		return <div>File not found {item?.id}</div>;
+		return (
+			<ExampleWrapper>
+				<Example className="col-span-2">
+					<NotFoundPage />
+				</Example>
+			</ExampleWrapper>
+		);
 	}
 	return (
 		<ExampleWrapper>

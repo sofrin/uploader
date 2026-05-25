@@ -41,7 +41,7 @@
 						"groups": [
 							{ "type": true },
 							[":BUN:", ":NODE:"],
-							[":BLANK_LINE:"],
+							":BLANK_LINE:",
 							"react",
 							":BLANK_LINE:",
 							":PACKAGE:",

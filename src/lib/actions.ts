@@ -9,7 +9,7 @@ const genId = customAlphabet("1234567890abcdef", 6);
 const maxFileSize = 1048576 * 10;
 
 export const writeFile = createServerFn()
-	.inputValidator(z.instanceof(FormData))
+	.validator(z.instanceof(FormData))
 	.handler(async ({ data }) => {
 		const file = data.get("file") as File;
 		if (!(file instanceof File))
@@ -37,18 +37,16 @@ export const writeFile = createServerFn()
 
 		return {
 			status: "success",
-			data: {
-				key: fileKey,
-				type: file.type,
-				ext: file.type.split("/")[1].split("+")[0],
-				date: new Date().toISOString(),
-				id: genId(),
-			},
+			key: fileKey,
+			type: file.type,
+			ext: file.type.split("/")[1].split("+")[0],
+			date: new Date().toISOString(),
+			id: genId(),
 		};
 	});
 
 export const deleteFile = createServerFn()
-	.inputValidator(z.string())
+	.validator(z.string())
 	.handler(async ({ data }) => {
 		const fileKey = data;
 		const s3file = s3.file(fileKey);
@@ -57,8 +55,6 @@ export const deleteFile = createServerFn()
 		});
 		return {
 			status: "success",
-			data: {
-				key: fileKey,
-			},
+			key: fileKey,
 		};
 	});

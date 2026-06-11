@@ -140,15 +140,21 @@ function App() {
 						</div>
 					</DialogContent>
 				</Dialog>
+				<Button
+					variant="link"
+					render={
+						<a href="/uploader.sxcu" download="uploader.sxcu">
+							ShareX конфиг
+						</a>
+					}
+				></Button>
 			</div>
 			<div className="col-span-2">
 				<Example className="col-span-2">
 					<FileUploader />
 				</Example>
 			</div>
-			{/*<div className="col-span-2">*/}
 			<SavedFiles />
-			{/*</div>*/}
 		</ExampleWrapper>
 	);
 }
@@ -321,9 +327,8 @@ function FileUploader() {
 				// Handle completion
 				xhr.addEventListener("load", () => {
 					if (xhr.status >= 200 && xhr.status < 300) {
-						const response = JSON.parse(xhr.responseText) as {
+						const response = JSON.parse(xhr.responseText) as Item & {
 							status: "success";
-							data: Item;
 						};
 						// Mark as completed
 						setUploadProgress((prev) =>
@@ -333,11 +338,11 @@ function FileUploader() {
 									: item,
 							),
 						);
-						console.log("Upload completed:", response.data);
-						setItems((prev) => [response.data, ...prev]);
+						console.log("Upload completed:", response);
+						setItems((prev) => [response, ...prev]);
 						handleFileRemoved(file.file.name);
 						removeFile(file.id);
-						resolve(response.data);
+						resolve(response);
 					} else {
 						// Handle error
 						setUploadProgress((prev) =>

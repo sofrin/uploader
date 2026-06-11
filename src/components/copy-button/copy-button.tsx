@@ -70,8 +70,8 @@ export function CopyButton({
 	return (
 		<Button
 			size={size}
-			onClick={(e) => {
-				copy(text);
+			onClick={async (e) => {
+				await copy(text);
 				onClick?.(e);
 			}}
 			aria-label="Copy"

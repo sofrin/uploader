@@ -142,6 +142,7 @@ function App() {
 				</Dialog>
 				<Button
 					variant="link"
+					nativeButton={false}
 					render={
 						<a href="/uploader.sxcu" download="uploader.sxcu">
 							ShareX конфиг

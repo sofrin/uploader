@@ -72,6 +72,12 @@ const SERVER_ENTRY_POINT = "./dist/server/server.js";
 
 // Logging utilities for professional output
 const log = {
+	error: (message: string) => {
+		console.log(`[ERROR] ${message}`);
+	},
+	header: (message: string) => {
+		console.log(`\n${message}\n`);
+	},
 	info: (message: string) => {
 		console.log(`[INFO] ${message}`);
 	},
@@ -81,14 +87,28 @@ const log = {
 	warning: (message: string) => {
 		console.log(`[WARNING] ${message}`);
 	},
-	error: (message: string) => {
-		console.log(`[ERROR] ${message}`);
-	},
-	header: (message: string) => {
-		console.log(`\n${message}\n`);
-	},
 };
+// Format file size with KB and actual gzip size
+const formatFileSize = (bytes: number, gzBytes?: number) => {
+	const kb = bytes / 1024;
+	const sizeStr = kb < 100 ? kb.toFixed(2) : kb.toFixed(1);
 
+	if (gzBytes !== undefined) {
+		const gzKb = gzBytes / 1024;
+		const gzStr = gzKb < 100 ? gzKb.toFixed(2) : gzKb.toFixed(1);
+		return {
+			gzip: gzStr,
+			size: sizeStr,
+		};
+	}
+
+	// Rough gzip estimation (typically 30-70% compression) if no actual gzip data
+	const gzipKb = kb * 0.35;
+	return {
+		gzip: gzipKb < 100 ? gzipKb.toFixed(2) : gzipKb.toFixed(1),
+		size: sizeStr,
+	};
+};
 // Preloading configuration from environment variables
 const MAX_PRELOAD_BYTES = Number(
 	process.env.ASSET_PRELOAD_MAX_SIZE ?? 5 * 1024 * 1024, // 5MB default
@@ -160,28 +180,29 @@ interface AssetMetadata {
  * In-memory asset with ETag and Gzip support
  */
 interface InMemoryAsset {
-	raw: Uint8Array;
-	gz?: Uint8Array;
 	etag?: string;
-	type: string;
+	gz?: Uint8Array;
 	immutable: boolean;
+	raw: Uint8Array;
 	size: number;
+	type: string;
 }
 
 /**
  * Result of static asset preloading process
  */
 interface PreloadResult {
-	routes: Record<string, (req: Request) => Response | Promise<Response>>;
 	loaded: AssetMetadata[];
+	routes: Record<string, (req: Request) => Response | Promise<Response>>;
 	skipped: AssetMetadata[];
 }
 
+const regex = /[/\\]/;
 /**
  * Check if a file is eligible for preloading based on configured patterns
  */
 function isFileEligibleForPreloading(relativePath: string): boolean {
-	const fileName = relativePath.split(/[/\\]/).pop() ?? relativePath;
+	const fileName = relativePath.split(regex).pop() ?? relativePath;
 
 	// If include patterns are specified, file must match at least one
 	if (INCLUDE_PATTERNS.length > 0) {
@@ -232,18 +253,18 @@ function createResponseHandler(
 ): (req: Request) => Response {
 	return (req: Request) => {
 		const headers: Record<string, string> = {
-			"Content-Type": asset.type,
 			"Cache-Control": asset.immutable
 				? "public, max-age=31536000, immutable"
 				: "public, max-age=3600",
+			"Content-Type": asset.type,
 		};
 
 		if (ENABLE_ETAG && asset.etag) {
 			const ifNone = req.headers.get("if-none-match");
 			if (ifNone && ifNone === asset.etag) {
 				return new Response(null, {
-					status: 304,
 					headers: { ETag: asset.etag },
+					status: 304,
 				});
 			}
 			headers.ETag = asset.etag;
@@ -257,12 +278,12 @@ function createResponseHandler(
 			headers["Content-Encoding"] = "gzip";
 			headers["Content-Length"] = String(asset.gz.byteLength);
 			const gzCopy = new Uint8Array(asset.gz);
-			return new Response(gzCopy, { status: 200, headers });
+			return new Response(gzCopy, { headers, status: 200 });
 		}
 
 		headers["Content-Length"] = String(asset.raw.byteLength);
 		const rawCopy = new Uint8Array(asset.raw);
-		return new Response(rawCopy, { status: 200, headers });
+		return new Response(rawCopy, { headers, status: 200 });
 	};
 }
 
@@ -341,12 +362,12 @@ async function initializeStaticRoutes(
 					const gz = compressDataIfAppropriate(bytes, metadata.type);
 					const etag = ENABLE_ETAG ? computeEtag(bytes) : undefined;
 					const asset: InMemoryAsset = {
-						raw: bytes,
-						gz,
 						etag,
-						type: metadata.type,
+						gz,
 						immutable: true,
+						raw: bytes,
 						size: bytes.byteLength,
+						type: metadata.type,
 					};
 					routes[route] = createResponseHandler(asset);
 
@@ -358,8 +379,8 @@ async function initializeStaticRoutes(
 						const fileOnDemand = Bun.file(filepath);
 						return new Response(fileOnDemand, {
 							headers: {
-								"Content-Type": metadata.type,
 								"Cache-Control": "public, max-age=3600",
+								"Content-Type": metadata.type,
 							},
 						});
 					};
@@ -375,7 +396,7 @@ async function initializeStaticRoutes(
 
 		// Show detailed file overview only when verbose mode is enabled
 		if (VERBOSE && (loaded.length > 0 || skipped.length > 0)) {
-			const allFiles = [...loaded, ...skipped].sort((a, b) =>
+			const allFiles = [...loaded, ...skipped].toSorted((a, b) =>
 				a.route.localeCompare(b.route),
 			);
 
@@ -385,35 +406,13 @@ async function initializeStaticRoutes(
 				60,
 			);
 
-			// Format file size with KB and actual gzip size
-			const formatFileSize = (bytes: number, gzBytes?: number) => {
-				const kb = bytes / 1024;
-				const sizeStr = kb < 100 ? kb.toFixed(2) : kb.toFixed(1);
-
-				if (gzBytes !== undefined) {
-					const gzKb = gzBytes / 1024;
-					const gzStr = gzKb < 100 ? gzKb.toFixed(2) : gzKb.toFixed(1);
-					return {
-						size: sizeStr,
-						gzip: gzStr,
-					};
-				}
-
-				// Rough gzip estimation (typically 30-70% compression) if no actual gzip data
-				const gzipKb = kb * 0.35;
-				return {
-					size: sizeStr,
-					gzip: gzipKb < 100 ? gzipKb.toFixed(2) : gzipKb.toFixed(1),
-				};
-			};
-
 			if (loaded.length > 0) {
 				console.log("\n📁 Preloaded into memory:");
 				console.log(
 					"Path                                          │    Size │ Gzip Size",
 				);
 				loaded
-					.sort((a, b) => a.route.localeCompare(b.route))
+					.toSorted((a, b) => a.route.localeCompare(b.route))
 					.forEach((file) => {
 						const { size, gzip } = formatFileSize(file.size);
 						const paddedPath = file.route.padEnd(maxPathLength);
@@ -429,7 +428,7 @@ async function initializeStaticRoutes(
 					"Path                                          │    Size │ Gzip Size",
 				);
 				skipped
-					.sort((a, b) => a.route.localeCompare(b.route))
+					.toSorted((a, b) => a.route.localeCompare(b.route))
 					.forEach((file) => {
 						const { size, gzip } = formatFileSize(file.size);
 						const paddedPath = file.route.padEnd(maxPathLength);
@@ -443,7 +442,7 @@ async function initializeStaticRoutes(
 		// Show detailed verbose info if enabled
 		if (VERBOSE) {
 			if (loaded.length > 0 || skipped.length > 0) {
-				const allFiles = [...loaded, ...skipped].sort((a, b) =>
+				const allFiles = [...loaded, ...skipped].toSorted((a, b) =>
 					a.route.localeCompare(b.route),
 				);
 				console.log("\n📊 Detailed file information:");
@@ -461,7 +460,7 @@ async function initializeStaticRoutes(
 								: "preloaded";
 					const route =
 						file.route.length > 30
-							? file.route.substring(0, 27) + "..."
+							? `${file.route.substring(0, 27)}...`
 							: file.route;
 					console.log(
 						`${status.padEnd(12)} │ ${route.padEnd(30)} │ ${file.type.padEnd(28)} │ ${reason.padEnd(10)}`,
@@ -495,7 +494,7 @@ async function initializeStaticRoutes(
 		);
 	}
 
-	return { routes, loaded, skipped };
+	return { loaded, routes, skipped };
 }
 
 /**
@@ -522,8 +521,15 @@ async function initializeServer() {
 
 	// Create Bun server
 	const server = Bun.serve({
+		// Global error handler
+		error(error) {
+			log.error(
+				`Uncaught server error: ${error instanceof Error ? error.message : String(error)}`,
+			);
+			return new Response("Internal Server Error", { status: 500 });
+		},
+		idleTimeout: 255,
 		port: SERVER_PORT,
-
 		routes: {
 			// Serve static assets (preloaded or on-demand)
 			...routes,
@@ -537,14 +543,6 @@ async function initializeServer() {
 					return new Response("Internal Server Error", { status: 500 });
 				}
 			},
-		},
-
-		// Global error handler
-		error(error) {
-			log.error(
-				`Uncaught server error: ${error instanceof Error ? error.message : String(error)}`,
-			);
-			return new Response("Internal Server Error", { status: 500 });
 		},
 	});
 

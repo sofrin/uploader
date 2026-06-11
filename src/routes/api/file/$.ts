@@ -19,7 +19,7 @@ export const Route = createFileRoute("/api/file/$")({
 				const file = data.get("file") as File;
 				if (!(file instanceof File))
 					return Response.json(
-						{ status: "failure", reason: "Invalid file" },
+						{ reason: "Invalid file", status: "failure" },
 						{
 							status: 400,
 						},
@@ -28,8 +28,8 @@ export const Route = createFileRoute("/api/file/$")({
 				if (file.size > maxFileSize) {
 					return Response.json(
 						{
-							status: "failure",
 							reason: "File size too large",
+							status: "failure",
 						},
 						{
 							status: 400,
@@ -41,8 +41,8 @@ export const Route = createFileRoute("/api/file/$")({
 				console.log("fileName", fileKey);
 				console.log("data", data);
 				const s3file = s3.file(fileKey, {
-					type: file.type,
 					contentDisposition: "inline",
+					type: file.type,
 				});
 				await s3file
 					.write(file, {
@@ -66,13 +66,13 @@ export const Route = createFileRoute("/api/file/$")({
 				db.file
 					.create({
 						data: {
-							key: fileKey,
-							type: file.type,
-							ext: file.type.split("/")[1].split("+")[0],
 							createdAt: new Date().toISOString(),
+							ext: file.type.split("/")[1].split("+")[0],
 							id: fileId,
-							size: file.size,
+							key: fileKey,
 							name: file.name,
+							size: file.size,
+							type: file.type,
 						},
 					})
 					.catch((err) => {
@@ -80,16 +80,16 @@ export const Route = createFileRoute("/api/file/$")({
 					});
 				return Response.json(
 					{
-						status: "success",
-						link: `${getUrl()}/${fileId}`,
-						delete: `${getUrl()}/delete?key=${fileKey}`,
-						size: file.size,
-						key: fileKey,
-						type: file.type,
-						ext: file.type.split("/")[1].split("+")[0],
 						date: new Date().toISOString(),
+						delete: `${getUrl()}/delete?key=${fileKey}`,
+						ext: file.type.split("/")[1].split("+")[0],
 						id: fileId,
+						key: fileKey,
+						link: `${getUrl()}/${fileId}`,
 						name: file.name,
+						size: file.size,
+						status: "success",
+						type: file.type,
 					},
 					{
 						status: 200,

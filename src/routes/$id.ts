@@ -17,8 +17,8 @@ export const Route = createFileRoute("/$id")({
 				if (!file) {
 					return Response.json(
 						{
-							status: "failure",
 							reason: "File not found",
+							status: "failure",
 						},
 						{
 							status: 404,
@@ -40,8 +40,8 @@ export const Route = createFileRoute("/$id")({
 				} else {
 					return Response.json(
 						{
-							status: "failure",
 							reason: "File not found",
+							status: "failure",
 						},
 						{
 							status: 404,

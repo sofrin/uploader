@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils.ts";
 const buttonGroupVariants = cva(
 	"flex w-fit items-stretch rounded-none *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-none [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
 	{
+		defaultVariants: {
+			orientation: "horizontal",
+		},
 		variants: {
 			orientation: {
 				horizontal:
@@ -17,9 +20,6 @@ const buttonGroupVariants = cva(
 				vertical:
 					"flex-col *:data-slot:rounded-b-none [&>[data-slot]~[data-slot]]:rounded-t-none [&>[data-slot]~[data-slot]]:border-t-0",
 			},
-		},
-		defaultVariants: {
-			orientation: "horizontal",
 		},
 	},
 );
@@ -31,10 +31,10 @@ function ButtonGroup({
 }: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
 	return (
 		<div
-			role="group"
-			data-slot="button-group"
-			data-orientation={orientation}
 			className={cn(buttonGroupVariants({ orientation }), className)}
+			data-orientation={orientation}
+			data-slot="button-group"
+			role="group"
 			{...props}
 		/>
 	);
@@ -70,12 +70,12 @@ function ButtonGroupSeparator({
 }: React.ComponentProps<typeof Separator>) {
 	return (
 		<Separator
-			data-slot="button-group-separator"
-			orientation={orientation}
 			className={cn(
 				"relative self-stretch bg-input data-horizontal:mx-px data-vertical:my-px data-vertical:h-auto data-horizontal:w-auto",
 				className,
 			)}
+			data-slot="button-group-separator"
+			orientation={orientation}
 			{...props}
 		/>
 	);

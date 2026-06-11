@@ -7,27 +7,6 @@ import { db } from "@/lib/prisma.ts";
 export const Route = createFileRoute("/api/file/$key")({
 	server: {
 		handlers: {
-			GET: async ({ params }) => {
-				const { key } = params;
-
-				const file = await db.file.findUnique({
-					where: { key },
-				});
-				if (!file) {
-					return Response.json(
-						{
-							status: "failure",
-							reason: "File not found",
-						},
-						{
-							status: 404,
-						},
-					);
-				}
-				return Response.json(file, {
-					status: 200,
-				});
-			},
 			DELETE: async ({ params }) => {
 				const { key } = params;
 				const file = await db.file.findUnique({
@@ -38,8 +17,8 @@ export const Route = createFileRoute("/api/file/$key")({
 				if (!file) {
 					return Response.json(
 						{
-							status: "failure",
 							reason: "File not found",
+							status: "failure",
 						},
 						{
 							status: 404,
@@ -52,6 +31,27 @@ export const Route = createFileRoute("/api/file/$key")({
 				});
 				return Response.json({
 					status: "success",
+				});
+			},
+			GET: async ({ params }) => {
+				const { key } = params;
+
+				const file = await db.file.findUnique({
+					where: { key },
+				});
+				if (!file) {
+					return Response.json(
+						{
+							reason: "File not found",
+							status: "failure",
+						},
+						{
+							status: 404,
+						},
+					);
+				}
+				return Response.json(file, {
+					status: 200,
 				});
 			},
 		},

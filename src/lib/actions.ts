@@ -13,9 +13,9 @@ export const writeFile = createServerFn()
 	.handler(async ({ data }) => {
 		const file = data.get("file") as File;
 		if (!(file instanceof File))
-			return { status: "failure", reason: "Invalid file" };
+			return { reason: "Invalid file", status: "failure" };
 		if (file.size > maxFileSize) {
-			return { status: "failure", reason: "File size too large" };
+			return { reason: "File size too large", status: "failure" };
 		}
 
 		const fileKey = nanoid();
@@ -36,12 +36,12 @@ export const writeFile = createServerFn()
 			});
 
 		return {
-			status: "success",
-			key: fileKey,
-			type: file.type,
-			ext: file.type.split("/")[1].split("+")[0],
 			date: new Date().toISOString(),
+			ext: file.type.split("/")[1].split("+")[0],
 			id: genId(),
+			key: fileKey,
+			status: "success",
+			type: file.type,
 		};
 	});
 
@@ -54,7 +54,7 @@ export const deleteFile = createServerFn()
 			console.error("Error deleting file", err);
 		});
 		return {
-			status: "success",
 			key: fileKey,
+			status: "success",
 		};
 	});

@@ -43,5 +43,5 @@ export function useCopyToClipboard({
 		[onCopyError, onCopySuccess, resetDelay],
 	);
 
-	return { state, copy } as const;
+	return { copy, state } as const;
 }

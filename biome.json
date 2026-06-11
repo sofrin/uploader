@@ -1,43 +1,12 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true,
-		"defaultBranch": "main"
-	},
-	"css": {
-		"parser": {
-			"tailwindDirectives": true
-		}
-	},
-	"files": {
-		"ignoreUnknown": false,
-		"includes": [
-			"**/src/**/*",
-			"**/.vscode/**/*",
-			"**/index.html",
-			"**/vite.config.js",
-			"vite.config.ts",
-			"!**/src/routeTree.gen.ts",
-			"!**/src/generated/*",
-			"!!.nitro",
-			"!!.output"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab",
-		"lineEnding": "auto"
-	},
 	"assist": {
 		"actions": {
 			"source": {
-				"recommended": true,
+				"noDuplicateClasses": "on",
 				"organizeImports": {
 					"level": "on",
 					"options": {
-						"identifierOrder": "natural",
 						"groups": [
 							{ "type": true },
 							[":BUN:", ":NODE:"],
@@ -52,17 +21,51 @@
 							":BLANK_LINE:",
 							":PATH:",
 							":URL:"
-						]
+						],
+						"identifierOrder": "natural"
 					}
-				}
+				},
+				"recommended": true,
+				"useSortedAttributes": "on",
+				"useSortedInterfaceMembers": "on",
+				"useSortedKeys": "on",
+				"useSortedProperties": "on"
 			}
 		}
 	},
+	"css": {
+		"parser": {
+			"allowWrongLineComments": true,
+			"tailwindDirectives": true
+		}
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": [
+			"**/src/**/*",
+			"**/.vscode/**/*",
+			"**/index.html",
+			"**/vite.config.js",
+			"vite.config.ts",
+			"!**/src/routeTree.gen.ts",
+			"!**/src/generated/*",
+			"turbo.json",
+			"biome.json",
+			"server.ts",
+			"!!.nitro",
+			"!!.output"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineEnding": "auto"
+	},
 	"linter": {
 		"domains": {
+			"next": "none",
 			"project": "all",
 			"react": "all",
-			"next": "none",
 			"solid": "none",
 			"types": "all"
 		},
@@ -70,15 +73,16 @@
 			"a11y": "off",
 			"correctness": {
 				"noUndeclaredDependencies": "off",
-				"useUniqueElementIds": "off",
-				"noUnresolvedImports": "off"
+				"noUnresolvedImports": "off",
+				"useUniqueElementIds": "off"
 			},
-
-			"performance": "on",
 			"nursery": {
-				"recommended": true,
-				"noMisusedPromises": "on",
 				"noFloatingPromises": "on",
+				"noMisusedPromises": "on",
+				"recommended": true,
+				"useAwaitThenable": "on",
+				"useFind": "on",
+				"useImportsFirst": "on",
 				"useSortedClasses": {
 					"fix": "safe",
 					"level": "error",
@@ -88,9 +92,8 @@
 					}
 				}
 			},
-			"suspicious": {
-				"noArrayIndexKey": "off"
-			},
+
+			"performance": "on",
 			"recommended": true,
 			"style": {
 				"useComponentExportOnlyModules": "off",
@@ -100,7 +103,16 @@
 						"style": "separatedType"
 					}
 				}
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off"
 			}
 		}
+	},
+	"vcs": {
+		"clientKind": "git",
+		"defaultBranch": "main",
+		"enabled": true,
+		"useIgnoreFile": true
 	}
 }

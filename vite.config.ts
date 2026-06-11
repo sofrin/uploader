@@ -5,28 +5,23 @@ import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
-	server: { forwardConsole: true },
 	build: {
-		sourcemap: false, // Explicitly disable source maps
-
 		rolldownOptions: {
 			external: ["bun", "bun:*", "@prisma/client"],
 		},
-	},
-	resolve: {
-		tsconfigPaths: true,
+		sourcemap: false, // Explicitly disable source maps
 	},
 	plugins: [
 		tailwindcss(),
 		tanstackStart({
-			spa: {
-				enabled: true,
+			prerender: {
+				failOnError: false,
 			},
 			sitemap: {
 				host: "https://i.sofrin.ru",
 			},
-			prerender: {
-				failOnError: false,
+			spa: {
+				enabled: true,
 			},
 		}),
 		viteReact(),
@@ -34,6 +29,10 @@ const config = defineConfig({
 			presets: [reactCompilerPreset()],
 		}),
 	],
+	resolve: {
+		tsconfigPaths: true,
+	},
+	server: { forwardConsole: true },
 });
 
 export default config;

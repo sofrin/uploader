@@ -141,13 +141,13 @@ function App() {
 					</DialogContent>
 				</Dialog>
 				<Button
-					variant="link"
 					nativeButton={false}
 					render={
-						<a href="/uploader.sxcu" download="uploader.sxcu">
+						<a download="uploader.sxcu" href="/uploader.sxcu">
 							ShareX конфиг
 						</a>
 					}
+					variant="link"
 				></Button>
 			</div>
 			<div className="col-span-2">
@@ -167,30 +167,30 @@ function SavedFiles() {
 		<AnimatePresence>
 			{items.map((item) => (
 				<motion.div
+					animate={{ opacity: 1 }}
+					className="fade-in col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
 					exit={{ opacity: 0 }}
 					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					layout
 					key={item.id}
-					className="fade-in col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
+					layout
 				>
 					<Card className="relative mx-auto w-full pt-0">
 						{item.type.startsWith("image/") ? (
 							<Image
 								className="relative z-20 aspect-video w-full object-cover"
-								layout="fullWidth"
 								height={80}
+								layout="fullWidth"
 								// width={160}
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 							/>
 						) : null}
 						{item.type.startsWith("video/") ? (
 							<video
-								preload="metadata"
-								controls
 								// loading="lazy"
 								// disablepictureinpicture
 								className="relative z-20 aspect-video w-full object-cover"
+								controls
+								preload="metadata"
 								// type={`video/${item.ext}`}
 								// height={80}
 								// width={160}
@@ -218,30 +218,28 @@ function SavedFiles() {
 							<ButtonGroup className="flex w-full">
 								<CopyButton
 									className="grow pr-3 pl-2.5 will-change-transform"
-									variant="outline"
 									size="default"
 									text={`${getUrl()}/${item.id}.${item.ext}`}
+									variant="outline"
 								>
 									{`${getUrl()}/${item.id}.${item.ext}`}
 								</CopyButton>
 								<Button
-									variant="outline"
 									nativeButton={false}
 									render={
 										<a
-											target="_blank"
 											href={`/${item.id}.${item.ext}`}
 											rel="noopener"
+											target="_blank"
 										>
 											<ExternalLinkIcon />
 										</a>
 									}
+									variant="outline"
 								></Button>
 
 								<Button
-									size="icon"
 									className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30"
-									variant="outline"
 									onClick={async () => {
 										await fetch(`/api/file/${item.key}`, {
 											method: "DELETE",
@@ -253,6 +251,8 @@ function SavedFiles() {
 											)
 											.catch((e) => console.error(e));
 									}}
+									size="icon"
+									variant="outline"
 								>
 									<Trash2Icon />
 								</Button>
@@ -383,9 +383,9 @@ function FileUploader() {
 	const handleFilesAdded = (addedFiles: FileWithPreview[]) => {
 		// Initialize progress tracking for each new file
 		const newProgressItems = addedFiles.map((file) => ({
+			completed: false,
 			fileId: file.file.name,
 			progress: 0,
-			completed: false,
 		}));
 
 		// Add new progress items to state
@@ -423,52 +423,52 @@ function FileUploader() {
 			getInputProps,
 		},
 	] = useFileUpload({
-		multiple: true,
-		maxSize,
 		maxFiles: 10,
+		maxSize,
+		multiple: true,
 		onFilesAdded: handleFilesAdded,
 	});
 	return (
 		<div className="flex flex-col gap-2">
 			{/* Drop area */}
 			<div
+				className="relative flex min-h-52 flex-col items-center not-data-files:justify-center overflow-hidden rounded-xl border border-input border-dashed p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50"
+				data-dragging={isDragging || undefined}
+				data-files={files.length > 0 || undefined}
 				onDragEnter={handleDragEnter}
 				onDragLeave={handleDragLeave}
 				onDragOver={handleDragOver}
 				onDrop={handleDrop}
-				data-dragging={isDragging || undefined}
-				data-files={files.length > 0 || undefined}
-				className="relative flex min-h-52 flex-col items-center not-data-files:justify-center overflow-hidden rounded-xl border border-input border-dashed p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50"
 			>
 				<input
 					{...getInputProps()}
-					className="sr-only"
 					aria-label="Upload image file"
+					className="sr-only"
 				/>
 				<AnimatePresence initial={false}>
 					{files.length > 0 ? (
 						<div className="flex w-full flex-col gap-3">
 							<div className="flex items-center justify-end gap-2">
 								<div className="flex gap-2">
-									<Button variant="outline" size="sm" onClick={openFileDialog}>
+									<Button onClick={openFileDialog} size="sm" variant="outline">
 										<UploadIcon
-											className="-ms-0.5 size-3.5 opacity-60"
 											aria-hidden="true"
+											className="-ms-0.5 size-3.5 opacity-60"
 										/>
 										Добавить файлы
 									</Button>
 									<Button
-										variant="outline"
-										size="sm"
 										onClick={() => {
 											// Clear all progress tracking
 											setUploadProgress([]);
 											clearFiles();
 										}}
+										size="sm"
+										variant="outline"
 									>
 										<Trash2Icon
-											className="-ms-0.5 size-3.5 opacity-60"
 											aria-hidden="true"
+											className="-ms-0.5 size-3.5 opacity-60"
 										/>
 										Удалить всё
 									</Button>
@@ -486,13 +486,13 @@ function FileUploader() {
 										console.log("isUploading:", isUploading);
 										return (
 											<motion.div
+												animate={{ opacity: 1 }}
+												className="flex flex-col gap-1 rounded-lg border bg-background p-2 pe-3 transition-opacity duration-300"
+												data-uploading={isUploading || undefined}
 												exit={{ opacity: 0 }}
 												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												layout
 												key={file.id}
-												data-uploading={isUploading || undefined}
-												className="flex flex-col gap-1 rounded-lg border bg-background p-2 pe-3 transition-opacity duration-300"
+												layout
 											>
 												<div className="flex items-center justify-between gap-2">
 													<div className="flex items-center gap-3 overflow-hidden in-data-[uploading=true]:opacity-50">
@@ -515,16 +515,16 @@ function FileUploader() {
 														</div>
 													</div>
 													<Button
-														size="icon"
-														variant="ghost"
+														aria-label="Remove file"
 														className="-me-2 size-8 text-muted-foreground/80 hover:bg-transparent hover:text-foreground"
 														onClick={() => {
 															handleFileRemoved(file.id);
 															removeFile(file.id);
 														}}
-														aria-label="Remove file"
+														size="icon"
+														variant="ghost"
 													>
-														<XIcon className="size-4" aria-hidden="true" />
+														<XIcon aria-hidden="true" className="size-4" />
 													</Button>
 												</div>
 
@@ -558,13 +558,13 @@ function FileUploader() {
 						</div>
 					) : (
 						<motion.div
+							className="flex flex-col items-center justify-center px-4 py-3 text-center"
 							exit={{ opacity: 0 }}
 							layout
-							className="flex flex-col items-center justify-center px-4 py-3 text-center"
 						>
 							<div
-								className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border bg-background"
 								aria-hidden="true"
+								className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border bg-background"
 							>
 								<ImageIcon className="size-4 opacity-60" />
 							</div>
@@ -575,11 +575,11 @@ function FileUploader() {
 								Максимум 10 ∙ До 100 MB
 							</p>
 							<Button
-								variant="outline"
 								className="mt-4"
 								onClick={openFileDialog}
+								variant="outline"
 							>
-								<UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
+								<UploadIcon aria-hidden="true" className="-ms-1 opacity-60" />
 								Выберите файлы
 							</Button>
 						</motion.div>

@@ -26,8 +26,6 @@ const deleteFileSearchSchema = z.object({
 });
 export const Route = createFileRoute("/delete/")({
 	component: RouteComponent,
-	validateSearch: deleteFileSearchSchema,
-	loaderDeps: ({ search: { key } }) => ({ key }),
 	loader: async ({ deps: { key } }) => {
 		try {
 			console.log("key", key);
@@ -40,6 +38,8 @@ export const Route = createFileRoute("/delete/")({
 			console.error(error);
 		}
 	},
+	loaderDeps: ({ search: { key } }) => ({ key }),
+	validateSearch: deleteFileSearchSchema,
 });
 
 function RouteComponent() {
@@ -62,19 +62,19 @@ function RouteComponent() {
 						{item.type.startsWith("image/") ? (
 							<Image
 								className="relative z-20 aspect-video w-full object-cover"
-								layout="fullWidth"
 								height={80}
+								layout="fullWidth"
 								// width={160}
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 							/>
 						) : null}
 						{item.type.startsWith("video/") ? (
 							<video
-								preload="metadata"
-								controls
 								// loading="lazy"
 								// disablepictureinpicture
 								className="relative z-20 aspect-video w-full object-cover"
+								controls
+								preload="metadata"
 								// type={`video/${item.ext}`}
 								// height={80}
 								// width={160}
@@ -101,9 +101,7 @@ function RouteComponent() {
 						<CardFooter>
 							<ButtonGroup className="flex w-full">
 								<Button
-									size="icon"
 									className="grow bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 dark:hover:bg-destructive/30"
-									variant="outline"
 									onClick={async () => {
 										await fetch(`/api/file/${item.key}`, {
 											method: "DELETE",
@@ -114,27 +112,29 @@ function RouteComponent() {
 											})
 											.catch((e) => console.error(e));
 									}}
+									size="icon"
+									variant="outline"
 								>
 									<Trash2Icon /> <span className="pl-2">Удалить файл</span>
 								</Button>
 								<CopyButton
 									className="pr-3 pl-2.5 will-change-transform"
-									variant="outline"
 									size="default"
 									text={`${getUrl()}/${item.id}.${item.ext}`}
+									variant="outline"
 								></CopyButton>
 								<Button
-									variant="outline"
 									nativeButton={false}
 									render={
 										<a
-											target="_blank"
 											href={`/${item.id}.${item.ext}`}
 											rel="noopener"
+											target="_blank"
 										>
 											<ExternalLinkIcon />
 										</a>
 									}
+									variant="outline"
 								></Button>
 							</ButtonGroup>
 						</CardFooter>

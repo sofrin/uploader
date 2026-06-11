@@ -4,12 +4,12 @@ function ExampleWrapper({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div className="w-full bg-background">
 			<div
-				data-slot="example-wrapper"
 				className={cn(
 					"mx-auto grid min-h-screen w-full min-w-0 max-w-5xl grid-cols-[1fr_1fr] content-start items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 md:gap-8 lg:p-12 2xl:max-w-6xl",
 
 					className,
 				)}
+				data-slot="example-wrapper"
 				{...props}
 			></div>
 		</div>
@@ -28,11 +28,11 @@ function Example({
 }) {
 	return (
 		<div
-			data-slot="example"
 			className={cn(
 				"mx-auto flex w-full min-w-0 max-w-lg flex-col gap-1 self-stretch lg:max-w-none",
 				containerClassName,
 			)}
+			data-slot="example"
 			{...props}
 		>
 			{title && (
@@ -41,11 +41,11 @@ function Example({
 				</div>
 			)}
 			<div
-				data-slot="example-content"
 				className={cn(
 					"flex min-w-0 flex-1 flex-col items-start gap-6 border border-dashed bg-background p-4 text-foreground sm:p-6 *:[div:not([class*='w-'])]:w-full",
 					className,
 				)}
+				data-slot="example-content"
 			>
 				{children}
 			</div>

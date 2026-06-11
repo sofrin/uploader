@@ -10,13 +10,13 @@ import { routeTree } from "./routeTree.gen.ts";
 // Create a new router instance
 export const getRouter = () => {
 	const router = createRouter({
-		routeTree,
-		scrollRestoration: true,
-		defaultViewTransition: true,
-		defaultNotFoundComponent: () => <NotFoundPage />,
 		defaultErrorComponent: ({ error, reset }) => (
 			<ErrorPage error={error} reset={reset} />
 		),
+		defaultNotFoundComponent: () => <NotFoundPage />,
+		defaultViewTransition: true,
+		routeTree,
+		scrollRestoration: true,
 		Wrap: (props: { children: React.ReactNode }) => {
 			return (
 				<Provider>

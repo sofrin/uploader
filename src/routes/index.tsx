@@ -44,7 +44,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
-import { getUrl } from "@/lib/utils.ts";
+import { getUrl, removeExif } from "@/lib/utils.ts";
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
 
@@ -296,11 +296,12 @@ function FileUploader() {
 		if (window.umami) {
 			void umami.track("file upload");
 		}
+		const strippedFile = await removeExif(file.file as File);
 		return new Promise((resolve, reject) => {
 			try {
 				// Create FormData
 				const formData = new FormData();
-				formData.append("file", file.file as File);
+				formData.append("file", strippedFile);
 				console.log("Uploading file:", file.file.name);
 
 				// Create XMLHttpRequest to track progress

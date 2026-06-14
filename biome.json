@@ -25,7 +25,7 @@
 						"identifierOrder": "natural"
 					}
 				},
-				"recommended": true,
+				"preset": "recommended",
 				"useSortedAttributes": "on",
 				"useSortedInterfaceMembers": "on",
 				"useSortedKeys": "on",
@@ -71,6 +71,7 @@
 		},
 		"rules": {
 			"a11y": "off",
+			"complexity": { "useArrayFind": "on" },
 			"correctness": {
 				"noUndeclaredDependencies": "off",
 				"noUnresolvedImports": "off",
@@ -79,9 +80,8 @@
 			"nursery": {
 				"noFloatingPromises": "on",
 				"noMisusedPromises": "on",
-				"recommended": true,
+				"preset": "recommended",
 				"useAwaitThenable": "on",
-				"useFind": "on",
 				"useImportsFirst": "on",
 				"useSortedClasses": {
 					"fix": "safe",
@@ -94,7 +94,7 @@
 			},
 
 			"performance": "on",
-			"recommended": true,
+			"preset": "recommended",
 			"style": {
 				"useComponentExportOnlyModules": "off",
 				"useImportType": {

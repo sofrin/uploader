@@ -17,6 +17,8 @@ export const Route = createFileRoute("/api/file/$")({
 			POST: async ({ request }) => {
 				const data = await request.formData();
 				const file = data.get("file") as File;
+				const fileType =
+					file.type !== "" ? file.type : data.get("type")?.toString();
 				if (!(file instanceof File))
 					return Response.json(
 						{ reason: "Invalid file", status: "failure" },
@@ -38,15 +40,13 @@ export const Route = createFileRoute("/api/file/$")({
 				}
 
 				const fileKey = nanoid();
-				console.log("fileName", fileKey);
-				console.log("data", data);
 				const s3file = s3.file(fileKey, {
 					contentDisposition: "inline",
-					type: file.type,
+					type: fileType,
 				});
 				await s3file
 					.write(file, {
-						type: file.type,
+						type: fileType,
 					})
 					.then((res) => {
 						console.log("File written successfully", res);
@@ -63,16 +63,16 @@ export const Route = createFileRoute("/api/file/$")({
 						);
 					});
 				const fileId = genId();
-				db.file
+				await db.file
 					.create({
 						data: {
 							createdAt: new Date().toISOString(),
-							ext: file.type.split("/")[1].split("+")[0],
+							ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
 							id: fileId,
 							key: fileKey,
 							name: file.name,
 							size: file.size,
-							type: file.type,
+							type: fileType ?? "image/png",
 						},
 					})
 					.catch((err) => {
@@ -82,14 +82,14 @@ export const Route = createFileRoute("/api/file/$")({
 					{
 						date: new Date().toISOString(),
 						delete: `${getUrl()}/delete?key=${fileKey}`,
-						ext: file.type.split("/")[1].split("+")[0],
+						ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
 						id: fileId,
 						key: fileKey,
 						link: `${getUrl()}/${fileId}`,
 						name: file.name,
 						size: file.size,
 						status: "success",
-						type: file.type,
+						type: fileType,
 					},
 					{
 						status: 200,

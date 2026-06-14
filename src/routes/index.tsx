@@ -302,8 +302,8 @@ function FileUploader() {
 				// Create FormData
 				const formData = new FormData();
 				formData.append("file", strippedFile);
+				formData.append("type", strippedFile.type);
 				console.log("Uploading file:", file.file.name);
-
 				// Create XMLHttpRequest to track progress
 				const xhr = new XMLHttpRequest();
 

@@ -180,28 +180,30 @@ function SavedFiles() {
 								className="relative z-20 aspect-video w-full object-cover"
 								height={80}
 								layout="fullWidth"
-								// width={160}
+								loading="lazy"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
+								// width={160}
 							/>
 						) : null}
 						{item.type.startsWith("video/") ? (
 							<video
-								// loading="lazy"
-								// disablepictureinpicture
 								className="relative z-20 aspect-video w-full object-cover"
 								controls
+								height={80}
+								//@ts-expect-error
+								loading="lazy"
 								preload="metadata"
-								// type={`video/${item.ext}`}
-								// height={80}
-								// width={160}
 								src={`${getUrl()}/${item.id}.${item.ext}`}
+								type={`video/${item.ext}`}
+								width={160}
 							/>
 						) : null}
 						{item.type.startsWith("audio/") ? (
 							<audio
 								className="w-full rounded-none"
-								// loading="lazy"
 								controls
+								//@ts-expect-error
+								loading="lazy"
 								preload="metadata"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 							/>

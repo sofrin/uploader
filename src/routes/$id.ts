@@ -35,8 +35,8 @@ export const Route = createFileRoute("/$id")({
 					return new Response(s3file.stream(), {
 						headers: {
 							"Accept-Ranges": "bytes",
-							"Content-Length": s3file.size.toString(),
-							"Content-Type": s3file.type,
+							"Content-Length": file.size.toString(),
+							"Content-Type": file.type,
 						},
 					});
 				} else {

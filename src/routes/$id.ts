@@ -36,6 +36,7 @@ export const Route = createFileRoute("/$id")({
 						headers: {
 							"Accept-Ranges": "bytes",
 							"Content-Length": file.size.toString(),
+							"Content-Range": `bytes 0-${file.size.toString()}/${file.size.toString()}`,
 							"Content-Type": file.type,
 						},
 					});

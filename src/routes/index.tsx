@@ -277,16 +277,14 @@ function FileUploader() {
 		if (!e.clipboardData?.files.length) {
 			return;
 		}
-		handleFilesAdded(
-			Array.from(e.clipboardData.files).map((file) => ({
-				file,
-				id: file.name,
-			})),
-		);
+		addFiles(e.clipboardData?.files);
 	});
 	useEffect(() => {
 		document.addEventListener("paste", (e) => {
 			e.preventDefault();
+			if (!e.clipboardData?.files.length) {
+				return;
+			}
 			onPaste(e);
 		});
 		return () => {
@@ -416,6 +414,7 @@ function FileUploader() {
 		{ files, isDragging, errors },
 		{
 			handleDragEnter,
+			addFiles,
 			handleDragLeave,
 			handleDragOver,
 			handleDrop,

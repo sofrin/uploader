@@ -62,3 +62,26 @@ export const removeExif = (file: File): Promise<File> => {
 		fr.readAsArrayBuffer(file);
 	});
 };
+
+export async function isAPNG(file: File) {
+	const buffer = await file.arrayBuffer();
+	// Convert ArrayBuffer to Uint8Array if necessary
+	const bytes = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
+
+	// Check for the standard PNG magic number signature: 89 50 4E 47 0D 0A 1A 0A
+	const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+	for (let i = 0; i < pngSignature.length; i++) {
+		if (bytes[i] !== pngSignature[i]) return false;
+	}
+
+	// Convert binary to string to easily search for chunk identifiers
+	// Only decode the first 100KB to optimize performance
+	const textDecoder = new TextDecoder("ascii");
+	const headerText = textDecoder.decode(bytes.subarray(0, 100000));
+
+	const actlIndex = headerText.indexOf("acTL");
+	const idatIndex = headerText.indexOf("IDAT");
+
+	// Must contain acTL, and it must appear before the first IDAT chunk
+	return actlIndex !== -1 && (idatIndex === -1 || actlIndex < idatIndex);
+}

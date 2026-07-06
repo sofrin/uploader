@@ -21,6 +21,7 @@ import {
 	XIcon,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { toast } from "sonner";
 
 import { CopyButton } from "@/components/copy-button/copy-button.tsx";
 import { Example, ExampleWrapper } from "@/components/example.tsx";
@@ -44,7 +45,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
-import { getUrl, removeExif } from "@/lib/utils.ts";
+import { getUrl, isAPNG, removeExif } from "@/lib/utils.ts";
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
 
@@ -296,6 +297,7 @@ function FileUploader() {
 		if (window.umami) {
 			void umami.track("file upload");
 		}
+
 		const strippedFile = await removeExif(file.file as File);
 		return new Promise((resolve, reject) => {
 			try {
@@ -392,8 +394,15 @@ function FileUploader() {
 		setUploadProgress((prev) => [...newProgressItems, ...prev]);
 
 		// Start upload for each file
-		addedFiles.forEach((file) => {
+		addedFiles.forEach(async (file) => {
 			if (file) {
+				if (
+					file.file.type === "image/png" &&
+					(await isAPNG(file.file as File))
+				) {
+					toast.error("apng не принимаются");
+					return removeFile(file.id);
+				}
 				uploadFileToServer(file)
 					.then((response) => {
 						console.log("Upload successful:", response);

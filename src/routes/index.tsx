@@ -548,7 +548,7 @@ function FileUploader() {
 
 														return (
 															<div className="mt-1 flex items-center gap-2">
-																<div className="h-1.5 w-full overflow-hidden rounded-full bg-accent-foreground">
+																<div className="h-1.5 w-full overflow-hidden rounded-full bg-accent">
 																	<div
 																		className="h-full bg-accent-foreground transition-all duration-300 ease-out"
 																		style={{ width: `${progress}%` }}

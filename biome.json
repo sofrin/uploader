@@ -8,7 +8,9 @@
 					"level": "on",
 					"options": {
 						"groups": [
-							{ "type": true },
+							{
+								"type": true
+							},
 							[":BUN:", ":NODE:"],
 							":BLANK_LINE:",
 							"react",
@@ -71,7 +73,9 @@
 		},
 		"rules": {
 			"a11y": "off",
-			"complexity": { "useArrayFind": "on" },
+			"complexity": {
+				"useArrayFind": "on"
+			},
 			"correctness": {
 				"noUndeclaredDependencies": "off",
 				"noUnresolvedImports": "off",
@@ -92,7 +96,6 @@
 					}
 				}
 			},
-
 			"performance": "on",
 			"preset": "recommended",
 			"style": {

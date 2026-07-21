@@ -188,7 +188,6 @@ function App() {
 							Донат
 						</a>
 					}
-					variant="link"
 				></Button>
 			</div>
 			<div className="col-span-2">

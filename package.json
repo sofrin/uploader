@@ -16,6 +16,7 @@
 		"@base-ui/react": "^1.6.0",
 		"@fontsource-variable/jetbrains-mono": "^5.3.0",
 		"@prisma/adapter-libsql": "^7.9.0",
+		"@prisma/client": "^7.9.0",
 		"@rolldown/plugin-babel": "^0.2.3",
 		"@tailwindcss/vite": "^4.3.3",
 		"@tanstack/react-router": "^1.170.18",

@@ -7,7 +7,7 @@ import { defineConfig } from "vite";
 const config = defineConfig({
 	build: {
 		rolldownOptions: {
-			external: ["bun", "bun:*", "@prisma/client"],
+			// external: ["bun", "bun:*", "@prisma/client"],
 		},
 		sourcemap: false, // Explicitly disable source maps
 	},

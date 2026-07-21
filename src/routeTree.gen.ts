@@ -9,26 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IdRouteImport } from './routes/$id'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DeleteIndexRouteImport } from './routes/delete/index'
+import { Route as IdRouteImport } from './routes/$id'
 import { Route as ApiStatsDotjsRouteImport } from './routes/api/stats[.]js'
-import { Route as ApiFileKeyRouteImport } from './routes/api/file/$key'
+import { Route as DeleteIndexRouteImport } from './routes/delete/index'
 import { Route as ApiFileSplatRouteImport } from './routes/api/file/$'
+import { Route as ApiFileKeyRouteImport } from './routes/api/file/$key'
 
-const IdRoute = IdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DeleteIndexRoute = DeleteIndexRouteImport.update({
-  id: '/delete/',
-  path: '/delete/',
+const IdRoute = IdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStatsDotjsRoute = ApiStatsDotjsRouteImport.update({
@@ -36,14 +31,19 @@ const ApiStatsDotjsRoute = ApiStatsDotjsRouteImport.update({
   path: '/api/stats.js',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiFileKeyRoute = ApiFileKeyRouteImport.update({
-  id: '/api/file/$key',
-  path: '/api/file/$key',
+const DeleteIndexRoute = DeleteIndexRouteImport.update({
+  id: '/delete/',
+  path: '/delete/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFileSplatRoute = ApiFileSplatRouteImport.update({
   id: '/api/file/$',
   path: '/api/file/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFileKeyRoute = ApiFileKeyRouteImport.update({
+  id: '/api/file/$key',
+  path: '/api/file/$key',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -110,13 +110,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$id': {
-      id: '/$id'
-      path: '/$id'
-      fullPath: '/$id'
-      preLoaderRoute: typeof IdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -124,11 +117,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/delete/': {
-      id: '/delete/'
-      path: '/delete'
-      fullPath: '/delete/'
-      preLoaderRoute: typeof DeleteIndexRouteImport
+    '/$id': {
+      id: '/$id'
+      path: '/$id'
+      fullPath: '/$id'
+      preLoaderRoute: typeof IdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/stats.js': {
@@ -138,11 +131,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStatsDotjsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/file/$key': {
-      id: '/api/file/$key'
-      path: '/api/file/$key'
-      fullPath: '/api/file/$key'
-      preLoaderRoute: typeof ApiFileKeyRouteImport
+    '/delete/': {
+      id: '/delete/'
+      path: '/delete'
+      fullPath: '/delete/'
+      preLoaderRoute: typeof DeleteIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/file/$': {
@@ -150,6 +143,13 @@ declare module '@tanstack/react-router' {
       path: '/api/file/$'
       fullPath: '/api/file/$'
       preLoaderRoute: typeof ApiFileSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/file/$key': {
+      id: '/api/file/$key'
+      path: '/api/file/$key'
+      fullPath: '/api/file/$key'
+      preLoaderRoute: typeof ApiFileKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

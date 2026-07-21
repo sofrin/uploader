@@ -4,6 +4,7 @@ import { Provider } from "jotai";
 import { ErrorPage } from "./components/error.tsx";
 import { NotFoundPage } from "./components/not-found.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
+// import { Spinner } from "./components/ui/spinner.tsx";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen.ts";
 
@@ -14,6 +15,11 @@ export const getRouter = () => {
 			<ErrorPage error={error} reset={reset} />
 		),
 		defaultNotFoundComponent: () => <NotFoundPage />,
+		// defaultPendingComponent: () => (
+		// 	<div className="flex h-full items-center justify-center text-foreground">
+		// 		<Spinner className="size-48" />
+		// 	</div>
+		// ),
 		defaultViewTransition: true,
 		routeTree,
 		scrollRestoration: true,

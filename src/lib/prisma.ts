@@ -14,6 +14,8 @@ declare global {
 
 export const db = globalThis.__prisma || new PrismaClient({ adapter });
 
+await db.$queryRaw`PRAGMA journal_mode = WAL`;
+
 if (process.env.NODE_ENV !== "production") {
 	globalThis.__prisma = db;
 }

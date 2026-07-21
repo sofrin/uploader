@@ -4,13 +4,13 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { db } from "@/lib/prisma.ts";
 
+const rBytes = /bytes=/;
 export const Route = createFileRoute("/$id")({
 	server: {
 		handlers: {
 			GET: async ({ params, request }) => {
 				const { id: idRaw } = params;
 				const id = idRaw.split(".")[0];
-				console.log("id:", id);
 				const file = await db.file.findUnique({
 					where: { id },
 				});
@@ -30,19 +30,14 @@ export const Route = createFileRoute("/$id")({
 					const s3file = s3.file(file.key, {
 						contentDisposition: "inline",
 					});
-					console.log(`file.type:  `, file.type);
 					const rangeHeader = request.headers.get("range");
 					const { size, type } = await s3file.stat();
 					if (rangeHeader) {
 						// Parse incoming header format: "bytes=start-end"
-						const parts = rangeHeader.replace(/bytes=/, "").split("-");
-						console.log(`parts:  `, parts);
+						const parts = rangeHeader.replace(rBytes, "").split("-");
 						const start = parseInt(parts[0], 10);
 						const end = parts[1] ? parseInt(parts[1], 10) : size - 1;
-						console.log(`start:  `, start);
-						console.log(`end:  `, end);
 						const contentLength = end - start + 1;
-						console.log(`contentLength:  `, contentLength);
 						// S3File.slice handles the range request to the cloud provider
 						const fileSlice = s3file.slice(start, end + 1);
 

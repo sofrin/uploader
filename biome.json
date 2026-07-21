@@ -55,7 +55,8 @@
 			"biome.json",
 			"server.ts",
 			"!!.nitro",
-			"!!.output"
+			"!!.output",
+			"prisma.config.ts"
 		]
 	},
 	"formatter": {

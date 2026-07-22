@@ -13,4 +13,4 @@ count.txt
 todos.json
 dev.db
 /generated/prisma
-/db
+./db/

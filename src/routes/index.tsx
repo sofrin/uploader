@@ -217,7 +217,7 @@ function SavedFiles() {
 					<Card className="relative mx-auto  pt-0">
 						{item.type.startsWith("image/") ? (
 							<Image
-								className="relative z-20 aspect-video object-fit"
+								className="relative z-20 aspect-video object-cover"
 								height={80}
 								aspectRatio={16/9}
 								loading="lazy"

@@ -63,7 +63,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					src="/api/stats.js"
 				></script>
 			</head>
-			<body>
+			<body className='min-w-screen'>
 				{children}
 				<Scripts />
 			</body>

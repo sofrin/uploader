@@ -208,18 +208,18 @@ function SavedFiles() {
 			{items.map((item) => (
 				<motion.div
 					animate={{ opacity: 1 }}
-					className="fade-in col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
+					className="fade-in col-span-2 md:col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
 					exit={{ opacity: 0 }}
 					initial={{ opacity: 0 }}
 					key={item.id}
 					layout
 				>
-					<Card className="relative mx-auto w-full pt-0">
+					<Card className="relative mx-auto  pt-0">
 						{item.type.startsWith("image/") ? (
 							<Image
-								className="relative z-20 aspect-video w-full object-cover"
+								className="relative z-20 aspect-video object-fit"
 								height={80}
-								layout="fullWidth"
+								aspectRatio={16/9}
 								loading="lazy"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 								// width={160}

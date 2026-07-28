@@ -214,10 +214,10 @@ function SavedFiles() {
 					key={item.id}
 					layout
 				>
-					<Card className="relative mx-auto  pt-0">
+					<Card className="relative mx-auto w-full pt-0">
 						{item.type.startsWith("image/") ? (
 							<Image
-								className="relative z-20 aspect-video object-cover"
+								className="relative z-20 aspect-video w-full object-cover"
 								height={80}
 								aspectRatio={16/9}
 								loading="lazy"

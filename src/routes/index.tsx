@@ -62,7 +62,7 @@ function App() {
 			<h2 className="col-span-2 pb-2 font-semibold text-3xl tracking-tight">
 				uploader
 			</h2>
-			<div className="flex col-span-2">
+			<div className="flex col-span-2 flex-wrap">
 				<Dialog>
 					<DialogTrigger
 						render={
@@ -217,9 +217,9 @@ function SavedFiles() {
 					<Card className="relative mx-auto w-full pt-0">
 						{item.type.startsWith("image/") ? (
 							<Image
-								className="relative z-20 aspect-video w-full object-cover"
-								height={80}
-								aspectRatio={16/9}
+								className="relative z-20 aspect-video object-cover"
+                height={80}
+                layout="fullWidth"
 								loading="lazy"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 								// width={160}
@@ -254,7 +254,7 @@ function SavedFiles() {
 									{new Date(item.date).toLocaleDateString("ru")}
 								</Badge>
 							</CardAction>
-							<CardTitle> {item.name}</CardTitle>
+							<CardTitle className="truncate">{item.name}</CardTitle>
 						</CardHeader>
 						<CardFooter>
 							<ButtonGroup className="flex w-full">
@@ -264,7 +264,7 @@ function SavedFiles() {
 									text={`${getUrl()}/${item.id}.${item.ext}`}
 									variant="outline"
 								>
-									{`${getUrl()}/${item.id}.${item.ext}`}
+									{`/${item.id}.${item.ext}`}
 								</CopyButton>
 								<Button
 									nativeButton={false}

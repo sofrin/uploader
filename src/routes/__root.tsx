@@ -1,4 +1,9 @@
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+	createRootRoute,
+	HeadContent,
+	Outlet,
+	Scripts,
+} from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 
@@ -48,11 +53,19 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
-	shellComponent: RootDocument,
+	component: RootComponent,
 	// ssr: "data-only",
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
+	return (
+		<RootLayout>
+			<Outlet />
+		</RootLayout>
+	);
+}
+
+function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="ru" suppressHydrationWarning>
 			<head>

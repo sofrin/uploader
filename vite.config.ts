@@ -29,6 +29,9 @@ const config = defineConfig({
 			presets: [reactCompilerPreset()],
 		}),
 	],
+	preview: {
+		host: "127.0.0.1",
+	},
 	resolve: {
 		tsconfigPaths: true,
 	},

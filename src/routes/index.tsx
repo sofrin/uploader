@@ -218,8 +218,8 @@ function SavedFiles() {
 						{item.type.startsWith("image/") ? (
 							<Image
 								className="relative z-20 aspect-video object-cover"
-                height={80}
-                layout="fullWidth"
+								height={80}
+								layout="fullWidth"
 								loading="lazy"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 								// width={160}

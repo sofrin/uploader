@@ -44,6 +44,7 @@ export const Route = createFileRoute("/$id")({
 						return new Response(fileSlice.stream(), {
 							headers: {
 								"Accept-Ranges": "bytes",
+								"Content-Disposition": `inline; filename="${file.name}"`,
 								"Content-Length": contentLength.toString(),
 								"Content-Range": `bytes ${start}-${end}/${size}`,
 								"Content-Type": type,
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/$id")({
 					return new Response(s3file.stream(), {
 						headers: {
 							"Accept-Ranges": "bytes",
+							"Content-Disposition": `inline; filename="${file.name}"`,
 							"Content-Length": file.size.toString(),
 							"Content-Type": file.type,
 						},

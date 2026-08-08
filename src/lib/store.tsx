@@ -8,4 +8,4 @@ export type Item = {
 	id: string;
 	name: string;
 };
-export const itemsAtom = atomWithStorage<Item[]>("files", []);
+export const itemsAtom = atomWithStorage<Item[]>("files1", []);

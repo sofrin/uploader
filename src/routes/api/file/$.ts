@@ -46,6 +46,9 @@ export const Route = createFileRoute("/api/file/$")({
 				});
 				await s3file
 					.write(file, {
+						partSize: 5 * 1024 * 1024,
+						queueSize: 10,
+						retry: 3,
 						type: fileType,
 					})
 					.then((res) => {

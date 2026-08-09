@@ -30,6 +30,7 @@ export const Route = createFileRoute("/$id")({
 					const s3file = s3.file(file.key, {
 						contentDisposition: "inline",
 					});
+
 					const rangeHeader = request.headers.get("range");
 					const { size, type } = await s3file.stat();
 					if (rangeHeader) {
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/$id")({
 						return new Response(fileSlice.stream(), {
 							headers: {
 								"Accept-Ranges": "bytes",
+								"Cache-Control": "public, max-age=3600",
 								"Content-Disposition": `inline; filename*=UTF-8''${encodeURI(file.name)}.${file.ext}`,
 								"Content-Length": contentLength.toString(),
 								"Content-Range": `bytes ${start}-${end}/${size}`,
@@ -55,6 +57,7 @@ export const Route = createFileRoute("/$id")({
 					return new Response(s3file.stream(), {
 						headers: {
 							"Accept-Ranges": "bytes",
+							"Cache-Control": "public, max-age=3600",
 							"Content-Disposition": `inline; filename*=UTF-8''${encodeURI(file.name)}.${file.ext}`,
 							"Content-Length": file.size.toString(),
 							"Content-Type": file.type,

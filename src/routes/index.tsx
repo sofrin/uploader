@@ -232,7 +232,7 @@ function SavedFiles() {
 								height={80}
 								//@ts-expect-error
 								loading="lazy"
-								preload="metadata"
+								preload="none"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 								type={`video/${item.ext}`}
 								width={160}

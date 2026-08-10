@@ -62,7 +62,7 @@ function App() {
 			<h2 className="col-span-2 pb-2 font-semibold text-3xl tracking-tight">
 				uploader
 			</h2>
-			<div className="flex col-span-2 flex-wrap">
+			<div className="col-span-2 flex flex-wrap">
 				<Dialog>
 					<DialogTrigger
 						render={
@@ -155,9 +155,9 @@ function App() {
 					nativeButton={false}
 					render={
 						<a
+							href="https://github.com/sofrin/uploader"
 							rel="noopener"
 							target="_blank"
-							href="https://github.com/sofrin/uploader"
 						>
 							<svg
 								fill="none"
@@ -181,9 +181,9 @@ function App() {
 					nativeButton={false}
 					render={
 						<a
+							href="https://donate.stream/sofrin"
 							rel="noopener"
 							target="_blank"
-							href="https://donate.stream/sofrin"
 						>
 							Донат
 						</a>
@@ -208,7 +208,7 @@ function SavedFiles() {
 			{items.map((item) => (
 				<motion.div
 					animate={{ opacity: 1 }}
-					className="fade-in col-span-2 md:col-span-1 flex w-full animate-in flex-col gap-2 border p-2"
+					className="fade-in col-span-2 flex w-full animate-in flex-col gap-2 border p-2 md:col-span-1"
 					exit={{ opacity: 0 }}
 					initial={{ opacity: 0 }}
 					key={item.id}
@@ -232,7 +232,7 @@ function SavedFiles() {
 								height={80}
 								//@ts-expect-error
 								loading="lazy"
-								preload="none"
+								preload="metadata"
 								src={`${getUrl()}/${item.id}.${item.ext}`}
 								type={`video/${item.ext}`}
 								width={160}

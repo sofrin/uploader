@@ -8,6 +8,7 @@ import {
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
+	component: RootComponent,
 	head: () => ({
 		links: [
 			{
@@ -53,7 +54,6 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
-	component: RootComponent,
 	// ssr: "data-only",
 });
 

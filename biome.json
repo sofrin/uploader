@@ -8,9 +8,7 @@
 					"level": "on",
 					"options": {
 						"groups": [
-							{
-								"type": true
-							},
+							{ "type": true },
 							[":BUN:", ":NODE:"],
 							":BLANK_LINE:",
 							"react",
@@ -22,7 +20,9 @@
 							"@/**",
 							":BLANK_LINE:",
 							":PATH:",
-							":URL:"
+							":URL:",
+							":BLANK_LINE:",
+							":STYLE:"
 						],
 						"identifierOrder": "natural"
 					}
@@ -55,8 +55,7 @@
 			"biome.json",
 			"server.ts",
 			"!!.nitro",
-			"!!.output",
-			"prisma.config.ts"
+			"!!.output"
 		]
 	},
 	"formatter": {
@@ -74,9 +73,7 @@
 		},
 		"rules": {
 			"a11y": "off",
-			"complexity": {
-				"useArrayFind": "on"
-			},
+			"complexity": { "useArrayFind": "on" },
 			"correctness": {
 				"noUndeclaredDependencies": "off",
 				"noUnresolvedImports": "off",
@@ -88,6 +85,7 @@
 				"preset": "recommended",
 				"useAwaitThenable": "on",
 				"useImportsFirst": "on",
+				"useReactCompiler": "warn",
 				"useSortedClasses": {
 					"fix": "safe",
 					"level": "error",
@@ -97,7 +95,11 @@
 					}
 				}
 			},
-			"performance": "on",
+
+			"performance": {
+				"noJsxPropsBind": "off",
+				"preset": "recommended"
+			},
 			"preset": "recommended",
 			"style": {
 				"useComponentExportOnlyModules": "off",
@@ -109,7 +111,9 @@
 				}
 			},
 			"suspicious": {
-				"noArrayIndexKey": "off"
+				"noArrayIndexKey": "off",
+				"noLeakedRender": "off",
+				"noUnnecessaryConditions": "off"
 			}
 		}
 	},

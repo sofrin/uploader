@@ -42,7 +42,7 @@ export const Route = createFileRoute("/$id")({
 						// S3File.slice handles the range request to the cloud provider
 						const fileSlice = s3file.slice(start, end + 1);
 
-						return new Response(fileSlice.stream(), {
+						return new Response(await fileSlice.arrayBuffer(), {
 							headers: {
 								"Accept-Ranges": "bytes",
 								"Cache-Control": "public, max-age=3600",
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/$id")({
 							status: 206,
 						});
 					}
-					return new Response(s3file.stream(), {
+					return new Response(await s3file.arrayBuffer(), {
 						headers: {
 							"Accept-Ranges": "bytes",
 							"Cache-Control": "public, max-age=3600",

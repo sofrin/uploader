@@ -1,14 +1,23 @@
-import { s3 } from "bun";
-
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { db } from "@/lib/prisma.ts";
 
-const rBytes = /bytes=/;
+export const s3 = new S3Client({
+	credentials: {
+		accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+	},
+	endpoint: process.env.S3_ENDPOINT!,
+	region: process.env.S3_REGION!,
+	requestChecksumCalculation: "WHEN_REQUIRED",
+});
+
 export const Route = createFileRoute("/$id")({
 	server: {
 		handlers: {
-			GET: async ({ params, request }) => {
+			GET: async ({ params }) => {
 				const { id: idRaw } = params;
 				const id = idRaw.split(".")[0];
 				const file = await db.file.findUnique({
@@ -25,55 +34,16 @@ export const Route = createFileRoute("/$id")({
 						},
 					);
 				}
+				const getObjectCommand = new GetObjectCommand({
+					Bucket: process.env.S3_BUCKET_DOMAIN,
+					Key: file.key,
+					ResponseCacheControl: "public, max-age=31536000, immutable",
+					ResponseContentDisposition: "inline",
+				});
 
-				if (await s3.file(file.key).exists()) {
-					const s3file = s3.file(file.key, {
-						contentDisposition: "inline",
-					});
-
-					const rangeHeader = request.headers.get("range");
-					const { size, type } = await s3file.stat();
-					if (rangeHeader) {
-						// Parse incoming header format: "bytes=start-end"
-						const parts = rangeHeader.replace(rBytes, "").split("-");
-						const start = parseInt(parts[0], 10);
-						const end = parts[1] ? parseInt(parts[1], 10) : size - 1;
-						const contentLength = end - start + 1;
-						// S3File.slice handles the range request to the cloud provider
-						const fileSlice = s3file.slice(start, end + 1);
-
-						return new Response(await fileSlice.arrayBuffer(), {
-							headers: {
-								"Accept-Ranges": "bytes",
-								"Cache-Control": "public, max-age=3600",
-								"Content-Disposition": `inline; filename*=UTF-8''${encodeURI(file.name)}.${file.ext}`,
-								"Content-Length": contentLength.toString(),
-								"Content-Range": `bytes ${start}-${end}/${size}`,
-								"Content-Type": type,
-							},
-							status: 206,
-						});
-					}
-					return new Response(await s3file.arrayBuffer(), {
-						headers: {
-							"Accept-Ranges": "bytes",
-							"Cache-Control": "public, max-age=3600",
-							"Content-Disposition": `inline; filename*=UTF-8''${encodeURI(file.name)}.${file.ext}`,
-							"Content-Length": file.size.toString(),
-							"Content-Type": file.type,
-						},
-					});
-				} else {
-					return Response.json(
-						{
-							reason: "File not found",
-							status: "failure",
-						},
-						{
-							status: 404,
-						},
-					);
-				}
+				const url = await getSignedUrl(s3, getObjectCommand);
+				console.log({ key: file.key, success: url });
+				return Response.redirect(url);
 			},
 		},
 	},

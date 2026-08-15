@@ -25,7 +25,15 @@ export const Route = createFileRoute("/api/file/$key")({
 						},
 					);
 				}
-				await s3.file(file.key).delete();
+				await s3
+					.file(file.key, {
+						accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+						bucket: process.env.S3_BUCKET,
+						endpoint: process.env.S3_ENDPOINT!,
+						region: process.env.S3_REGION!,
+						secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+					})
+					.delete();
 				await db.file.delete({
 					where: { key },
 				});

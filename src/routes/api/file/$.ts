@@ -1,10 +1,10 @@
-import { s3 } from "bun";
-
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { createFileRoute } from "@tanstack/react-router";
 import { customAlphabet, nanoid } from "nanoid";
 
 import { db } from "@/lib/prisma.ts";
 import { getUrl } from "@/lib/utils.ts";
+import { s3 } from "@/routes/$id.ts";
 
 const maxFileSize = 1048576 * 100;
 const genId = customAlphabet(
@@ -40,31 +40,16 @@ export const Route = createFileRoute("/api/file/$")({
 				}
 
 				const fileKey = nanoid();
-				const s3file = s3.file(fileKey, {
-					contentDisposition: "inline",
-					type: fileType,
+				const putObjectCommand = new PutObjectCommand({
+					Body: await file.bytes(),
+					Bucket: "sofrin",
+					ContentLength: file.size,
+					ContentType: file.type,
+					Key: fileKey,
 				});
-				await s3file
-					.write(file, {
-						partSize: 5 * 1024 * 1024,
-						queueSize: 10,
-						retry: 3,
-						type: fileType,
-					})
-					.then((res) => {
-						console.log("File written successfully", res);
-					})
-					.catch((err) => {
-						console.error("Error writing file", err);
-						return Response.json(
-							{
-								status: "failure",
-							},
-							{
-								status: 500,
-							},
-						);
-					});
+
+				await s3.send(putObjectCommand);
+
 				const fileId = genId();
 				await db.file
 					.create({

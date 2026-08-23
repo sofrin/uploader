@@ -30,6 +30,7 @@
 		"dotenv": "^17.4.2",
 		"jotai": "^2.20.2",
 		"lucide-react": "^1.33.0",
+		"mime-types": "^3.0.2",
 		"motion": "^13.1.1",
 		"nanoid": "^6.0.1",
 		"prisma": "^7.9.1",

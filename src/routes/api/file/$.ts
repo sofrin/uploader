@@ -1,5 +1,6 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { createFileRoute } from "@tanstack/react-router";
+import mime from "mime-types";
 import { customAlphabet, nanoid } from "nanoid";
 
 import { db } from "@/lib/prisma.ts";
@@ -18,7 +19,13 @@ export const Route = createFileRoute("/api/file/$")({
 				const data = await request.formData();
 				const file = data.get("file") as File;
 				const fileType =
-					file.type !== "" ? file.type : data.get("type")?.toString();
+					file.type !== ""
+						? file.type
+						: data.get("type")?.toString() !== ""
+							? mime.lookup(file.name)
+							: "image/png";
+
+				console.log("fileType", fileType);
 				if (!(file instanceof File))
 					return Response.json(
 						{ reason: "Invalid file", status: "failure" },
@@ -44,7 +51,7 @@ export const Route = createFileRoute("/api/file/$")({
 					Body: await file.bytes(),
 					Bucket: "sofrin",
 					ContentLength: file.size,
-					ContentType: file.type,
+					ContentType: fileType,
 					Key: fileKey,
 				});
 

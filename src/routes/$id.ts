@@ -37,7 +37,7 @@ export const Route = createFileRoute("/$id")({
 				const getObjectCommand = new GetObjectCommand({
 					Bucket: process.env.S3_BUCKET_DOMAIN,
 					Key: file.key,
-					ResponseCacheControl: "public, max-age=31536000, immutable",
+					// ResponseCacheControl: "public, max-age=31536000, immutable",
 					ResponseContentDisposition: "inline",
 				});
 

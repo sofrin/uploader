@@ -336,14 +336,14 @@ function FileUploader() {
 		if (window.umami) {
 			void umami.track("file upload");
 		}
-
+		// TODO: make this optional setting bc breaks some files
 		const strippedFile = await removeExif(file.file as File);
 		return new Promise((resolve, reject) => {
 			try {
 				// Create FormData
 				const formData = new FormData();
-				formData.append("file", strippedFile);
-				formData.append("type", strippedFile.type);
+				formData.append("file", file.file as File);
+				formData.append("type", file.file.type);
 				console.log("Uploading file:", file.file.name);
 				// Create XMLHttpRequest to track progress
 				const xhr = new XMLHttpRequest();

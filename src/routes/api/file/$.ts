@@ -22,7 +22,7 @@ export const Route = createFileRoute("/api/file/$")({
 					file.type !== ""
 						? file.type
 						: data.get("type")?.toString() !== ""
-							? mime.lookup(file.name)
+							? mime.lookup(file.name) || "image/png"
 							: "image/png";
 
 				console.log("fileType", fileType);
@@ -67,7 +67,7 @@ export const Route = createFileRoute("/api/file/$")({
 							key: fileKey,
 							name: file.name,
 							size: file.size,
-							type: fileType ?? "image/png",
+							type: fileType,
 						},
 					})
 					.catch((err) => {

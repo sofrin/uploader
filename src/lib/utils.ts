@@ -1,11 +1,5 @@
-import type { ClassValue } from "clsx";
+export { cn } from "cn";
 
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
-}
 export function getUrl() {
 	const base = (() => {
 		if (process.env.NODE_ENV === "development") {

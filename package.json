@@ -4,8 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "bun run server.ts",
-		"dev": "bun --bun run  vite dev --port 3000",
-		"build": "bun --bun run vite build",
+		"dev": "bunx --bun vite --port 3000",
+		"build": "bunx --bun vite build",
 		"preview": "vite preview",
 		"lint": "biome lint",
 		"format": "biome format",

@@ -25,7 +25,9 @@ const deleteFileSearchSchema = z.object({
 	key: z.string().default(""),
 });
 export const Route = createFileRoute("/delete/")({
-	component: RouteComponent,
+  component: RouteComponent,
+  loaderDeps: ({ search: { key } }) => ({ key }),
+	validateSearch: deleteFileSearchSchema,
 	loader: async ({ deps: { key } }) => {
 		try {
 			console.log("key", key);
@@ -38,8 +40,6 @@ export const Route = createFileRoute("/delete/")({
 			console.error(error);
 		}
 	},
-	loaderDeps: ({ search: { key } }) => ({ key }),
-	validateSearch: deleteFileSearchSchema,
 });
 
 function RouteComponent() {

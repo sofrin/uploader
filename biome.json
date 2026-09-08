@@ -30,7 +30,7 @@
 				"preset": "recommended",
 				"useSortedAttributes": "on",
 				"useSortedInterfaceMembers": "on",
-				"useSortedKeys": "on",
+				"useSortedKeys": "off",
 				"useSortedProperties": "on"
 			}
 		}

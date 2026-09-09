@@ -14,15 +14,20 @@ const config = defineConfig({
 	plugins: [
 		tailwindcss(),
 		tanstackStart({
+			pages: [
+				{
+					path: "/",
+				},
+			],
 			prerender: {
 				failOnError: false,
 			},
 			sitemap: {
 				host: "https://i.sofrin.ru",
 			},
-			spa: {
-				enabled: true,
-			},
+			// spa: {
+			// 	enabled: true,
+			// },
 		}),
 		viteReact(),
 		babel({

@@ -6,7 +6,11 @@ export const Route = createFileRoute("/api/stats.js")({
 			GET: async () => {
 				const scriptText = await fetch("https://cloud.umami.is/script.js");
 
-				return new Response(await scriptText.text());
+				return new Response(await scriptText.text(), {
+					headers: {
+						"Content-Type": "application/javascript",
+					},
+				});
 			},
 		},
 	},

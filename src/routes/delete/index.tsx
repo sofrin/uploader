@@ -1,6 +1,5 @@
-import type { Item } from "@/lib/store.tsx";
-
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Image } from "@unpic/react";
 import { ExternalLinkIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -19,21 +18,33 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card.tsx";
+import { db } from "@/lib/prisma.ts";
 import { getUrl } from "@/lib/utils.ts";
 
 const deleteFileSearchSchema = z.object({
 	key: z.string().default(""),
 });
+
+const getFile = createServerFn()
+	.validator((data: { key: string }) => data)
+	.handler(async ({ data }) => {
+		const file = await db.file.findUnique({
+			where: { key: data.key },
+		});
+		if (!file) {
+			return undefined;
+		}
+		return file;
+	});
+
 export const Route = createFileRoute("/delete/")({
-  component: RouteComponent,
-  loaderDeps: ({ search: { key } }) => ({ key }),
+	component: RouteComponent,
+	loaderDeps: ({ search: { key } }) => ({ key }),
 	validateSearch: deleteFileSearchSchema,
 	loader: async ({ deps: { key } }) => {
 		try {
 			console.log("key", key);
-			const file = await fetch(`${getUrl()}/api/file/${key}`).then(
-				(res) => res.json() as Promise<Item & { createdAt: string }>,
-			);
+			const file = await getFile({ data: { key } });
 			console.log("file", file);
 			return file;
 		} catch (error) {
@@ -48,7 +59,7 @@ function RouteComponent() {
 	if (!item?.id) {
 		return (
 			<ExampleWrapper>
-				<Example className="col-span-2">
+				<Example className="col-span-full">
 					<NotFoundPage />
 				</Example>
 			</ExampleWrapper>

@@ -37,8 +37,8 @@ export const Route = createFileRoute("/$id")({
 				const getObjectCommand = new GetObjectCommand({
 					Bucket: process.env.S3_BUCKET_DOMAIN,
 					Key: file.key,
-					// ResponseCacheControl: "public, max-age=31536000, immutable",
-					ResponseContentDisposition: "inline",
+					ResponseCacheControl: "public, max-age=31536000, immutable",
+					ResponseContentDisposition: `inline; filename=${file.name}`,
 				});
 
 				const url = await getSignedUrl(s3, getObjectCommand, {

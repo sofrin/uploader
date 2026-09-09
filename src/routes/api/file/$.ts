@@ -50,7 +50,7 @@ export const Route = createFileRoute("/api/file/$")({
 				s3.write(fileKey, file, {
 					accessKeyId: process.env.S3_ACCESS_KEY_ID!,
 					bucket: process.env.S3_BUCKET,
-					contentDisposition: "inline",
+					contentDisposition: `inline; filename=${file.name}`,
 					endpoint: process.env.S3_ENDPOINT!,
 					region: process.env.S3_REGION!,
 					secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,

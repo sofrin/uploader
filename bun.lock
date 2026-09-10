@@ -11,13 +11,11 @@
         "@fontsource-variable/jetbrains-mono": "^5.3.0",
         "@prisma/adapter-libsql": "7.10.0",
         "@prisma/client": "7.10.0",
-        "@rolldown/plugin-babel": "^0.2.4",
         "@tailwindcss/vite": "^4.3.3",
         "@tanstack/react-router": "^1.170.34",
         "@tanstack/react-start": "^1.168.51",
         "@types/mime-types": "^3.0.1",
         "@unpic/react": "^1.0.2",
-        "babel-plugin-react-compiler": "^1.0.0",
         "class-variance-authority": "^0.7.1",
         "cn": "^0.2.6",
         "dotenv": "^17.4.2",
@@ -43,6 +41,7 @@
         "@types/react-dom": "^19.3.0",
         "@types/umami": "^2.10.1",
         "@vitejs/plugin-react": "^6.1.1",
+        "oxc-transform-react": "^0.149.0",
         "typescript": "^7.0.2",
         "vite": "^8.2.2",
       },
@@ -245,6 +244,44 @@
 
     "@oxc-project/types": ["@oxc-project/types@0.149.0", "", {}, "sha512-Efcc+iF0j3Bf67YjEqIqWXbX5XddXoK/Mw4K1/JuXwRCZ8N16VR7iT23nlCc9XrveFVh/E5Rqs2StT0V8v9LdA=="],
 
+    "@oxc-transform-react/binding-android-arm-eabi": ["@oxc-transform-react/binding-android-arm-eabi@0.149.0", "", { "os": "android", "cpu": "arm" }, "sha512-j9tB2Ug9rZMxBxE57nJJvB0QMXqrAYdPB5653DtAFCbp5WmuOPot2iz9Ctm64oMQchdutYwVoHKfZPC23ZpN+w=="],
+
+    "@oxc-transform-react/binding-android-arm64": ["@oxc-transform-react/binding-android-arm64@0.149.0", "", { "os": "android", "cpu": "arm64" }, "sha512-GE5jGUca23DbM6jsMccmrkBe7LlbKvO03JznFXMupKN3os2MrwNnT9bm3CxgC5ih0KKnpwdOhP6+gayaf/RsRQ=="],
+
+    "@oxc-transform-react/binding-darwin-arm64": ["@oxc-transform-react/binding-darwin-arm64@0.149.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-3XWdu3umUjOyDWamugshtYYglZJR/TnP7gjnvGc3vI1ozqRrtS+QLjs73XOKU7KTkfuoBSh0lf0cF+Y8u8aqng=="],
+
+    "@oxc-transform-react/binding-darwin-x64": ["@oxc-transform-react/binding-darwin-x64@0.149.0", "", { "os": "darwin", "cpu": "x64" }, "sha512-qUcf+jK5c5uvSCH392AOSZKj6fwdYxMC9zwpshIzf0Kpj73RGZciN3E7OG77epVQvh+B/REurBTV+dmywmZwRQ=="],
+
+    "@oxc-transform-react/binding-freebsd-x64": ["@oxc-transform-react/binding-freebsd-x64@0.149.0", "", { "os": "freebsd", "cpu": "x64" }, "sha512-curcmpjfcjNJd+OcvnBAZGWbY5oWNmOduYMrIpRAt+2Vr85BOk6t++bjn1vIJ+0CIOSd86EPNh5H2uEGfrjUpg=="],
+
+    "@oxc-transform-react/binding-linux-arm-gnueabihf": ["@oxc-transform-react/binding-linux-arm-gnueabihf@0.149.0", "", { "os": "linux", "cpu": "arm" }, "sha512-6PsFpEwOLCMLTCH7K9/UaUY9JXimAf3PaVrUKFEKZenBAVByV8Rpk5hK8xFk9+xWA4+a3EckqzgT7VHnTV8POQ=="],
+
+    "@oxc-transform-react/binding-linux-arm-musleabihf": ["@oxc-transform-react/binding-linux-arm-musleabihf@0.149.0", "", { "os": "linux", "cpu": "arm" }, "sha512-Jqnar7VWfwZovsfhJu0cXXOtypQYaEPSrhScNVtAPrWkb8bpuvF2JJ3BebxyvGcXi2MMRMaD9LyyVrBlGfeCFw=="],
+
+    "@oxc-transform-react/binding-linux-arm64-gnu": ["@oxc-transform-react/binding-linux-arm64-gnu@0.149.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-c+pZ8PPe9KpaTvkASe1QK//YxghFVoPTvg/oOQqldBUje04kemIR7ThfvLDfMe36UQ/wm/KYSNmISDJis1DXZQ=="],
+
+    "@oxc-transform-react/binding-linux-arm64-musl": ["@oxc-transform-react/binding-linux-arm64-musl@0.149.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-EUxJd2xsFvNvfMGZIgssLXH7AcsRTCo/2BXUZZOUgyPB59KsnxhQ+KRwi9NeX7YhgLMx6fv+ZuYpCyPs6PIw4A=="],
+
+    "@oxc-transform-react/binding-linux-ppc64-gnu": ["@oxc-transform-react/binding-linux-ppc64-gnu@0.149.0", "", { "os": "linux", "cpu": "ppc64" }, "sha512-+DtOzO4MgQvubmmZRQPpUO6aWffXkrjv3XnenkC9Jf0UMW644o0TRADCfP0Qye+evLv9pEHpiLbI9aH5w6WzpQ=="],
+
+    "@oxc-transform-react/binding-linux-riscv64-gnu": ["@oxc-transform-react/binding-linux-riscv64-gnu@0.149.0", "", { "os": "linux", "cpu": "none" }, "sha512-8s2RVzHkUjDvGM1k9BdVxUvoJUcMQ2yUFH+vJWhb+T/Pwsr0EasHih5YN+zv+Wx/YviiH0gDkqxx2vpInAhQyA=="],
+
+    "@oxc-transform-react/binding-linux-riscv64-musl": ["@oxc-transform-react/binding-linux-riscv64-musl@0.149.0", "", { "os": "linux", "cpu": "none" }, "sha512-S/GBmspvYLfxbT6muuyaguA/9msJvZAaZ1fHrAt+moW6msZyokEnJ/3CvOX15gcXbj93+LSSsusReQpbovHZhQ=="],
+
+    "@oxc-transform-react/binding-linux-s390x-gnu": ["@oxc-transform-react/binding-linux-s390x-gnu@0.149.0", "", { "os": "linux", "cpu": "s390x" }, "sha512-8U+ZC2sqpXxDptpvqQRtompH1ivacHiEUgtsMva8IugCvxcNmd+A7sDtxlOYfNrKPO8ToUPEuWA9qEzJtm6YAg=="],
+
+    "@oxc-transform-react/binding-linux-x64-gnu": ["@oxc-transform-react/binding-linux-x64-gnu@0.149.0", "", { "os": "linux", "cpu": "x64" }, "sha512-RLMKO7f7c/lM5Q3Uw8SFyI7eJ7tPqPjo/3C2EgANvtY3/ySiRSoaxC5OozX/1ATvqO5X75r6TjjPx+lPKsJ11A=="],
+
+    "@oxc-transform-react/binding-linux-x64-musl": ["@oxc-transform-react/binding-linux-x64-musl@0.149.0", "", { "os": "linux", "cpu": "x64" }, "sha512-F3iGtmHwRZa9OCQ43ccod3tQpfWaPiUGRSCjMV7EJK7qWsGqp8fgMxIUIRip/iEXBodIQ9iq4bA4vszhwohRkA=="],
+
+    "@oxc-transform-react/binding-openharmony-arm64": ["@oxc-transform-react/binding-openharmony-arm64@0.149.0", "", { "os": "none", "cpu": "arm64" }, "sha512-+DYaxAGwHkKVIf1+zRS3is8ay2ZADfreYRhLLJ7CbvJqmpE4tjJoIIqjcWmZnRIhZK2+u9GDOfV17byr0nitbw=="],
+
+    "@oxc-transform-react/binding-win32-arm64-msvc": ["@oxc-transform-react/binding-win32-arm64-msvc@0.149.0", "", { "os": "win32", "cpu": "arm64" }, "sha512-F0x4PSnABQzrqjUBQgh5NOCj0uJnRkgeQoULsVADpS0DdKCO4qNIF8PABjAzmx1hl/6Mg/Cs07s5bvTfiRFOUw=="],
+
+    "@oxc-transform-react/binding-win32-ia32-msvc": ["@oxc-transform-react/binding-win32-ia32-msvc@0.149.0", "", { "os": "win32", "cpu": "ia32" }, "sha512-z5Idox/U/jAR5I+uCBgcEK49I0fXsA2+BaQ58xeKl//BDG4tFYnFSBBg24z/PaouDqXJHAi8koimLReFDwoG+A=="],
+
+    "@oxc-transform-react/binding-win32-x64-msvc": ["@oxc-transform-react/binding-win32-x64-msvc@0.149.0", "", { "os": "win32", "cpu": "x64" }, "sha512-g3v1prVeSrseqsRRU44lL8V64yWBkRxcdrY5j80b5OxUjFv643qXv80n1JcS4iH3RbqQylfJFldginKo8XOsIQ=="],
+
     "@prisma/adapter-libsql": ["@prisma/adapter-libsql@7.10.0", "", { "dependencies": { "@libsql/client": "^0.17.0", "@prisma/driver-adapter-utils": "7.10.0", "async-mutex": "0.5.0" } }, "sha512-ANjUjJ/TrDQhR8jFU8HvYWRdwP17Lox1WL81zZvHcPVeFehZfNomAsPMNY24EBTLLZp0Xw4Na5Zf1S+EuKMKxw=="],
 
     "@prisma/client": ["@prisma/client@7.10.0", "", { "dependencies": { "@prisma/client-runtime-utils": "7.10.0" }, "peerDependencies": { "prisma": "*", "typescript": ">=5.4.0" }, "optionalPeers": ["prisma", "typescript"] }, "sha512-Ubw/QS9JGIBSBUsyxAUQuK/Jcu0Tsva7le7QbLd91Kix9yJvYDdj5QkwgEbbZniH80dd+sziQcALPc+HnvQC8Q=="],
@@ -318,8 +355,6 @@
     "@rolldown/binding-win32-arm64-msvc": ["@rolldown/binding-win32-arm64-msvc@1.2.8", "", { "os": "win32", "cpu": "arm64" }, "sha512-xWBkPOF1Q9k/Gv1nQXnVdLxKu74jXppuOM4Z3mnypVUJJJwLsMl7hNJGRAUJoG8A5MgOI1ACKM+wBFxSJzKy4A=="],
 
     "@rolldown/binding-win32-x64-msvc": ["@rolldown/binding-win32-x64-msvc@1.2.8", "", { "os": "win32", "cpu": "x64" }, "sha512-uz2ZvfgXbxqNwijjjbxrnvALwpyODDcgc1T1N8N3rf/DXKQmaFwmB4LX4yyjggpwN2obdQLb2rgirX5ffCWYng=="],
-
-    "@rolldown/plugin-babel": ["@rolldown/plugin-babel@0.2.4", "", { "dependencies": { "picomatch": "^4.0.7" }, "peerDependencies": { "@babel/core": "^7.29.0 || ^8.0.0-rc.1", "@babel/plugin-transform-runtime": "^7.29.0 || ^8.0.0-rc.1", "@babel/runtime": "^7.27.0 || ^8.0.0-rc.1", "rolldown": "^1.0.0-rc.5", "vite": "^8.0.0" }, "optionalPeers": ["@babel/plugin-transform-runtime", "@babel/runtime", "vite"] }, "sha512-ygmm2j/mN+aCvstHo0x3IOu4uc6LqXT9SJ3q4kpfG/+Yhfz0B+E47FITcC0FljZADwUFARP6E2kiE+Lc26D8wg=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.1", "", {}, "sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw=="],
 
@@ -540,8 +575,6 @@
     "aws-ssl-profiles": ["aws-ssl-profiles@1.1.2", "", {}, "sha512-NZKeq9AfyQvEeNlN0zSYAaWrmBffJh3IELMZfRpJVWgrpEbtEpnjvzqBPf+mxoI287JohRDoa+/nsfqqiZmF6g=="],
 
     "babel-dead-code-elimination": ["babel-dead-code-elimination@1.0.12", "", { "dependencies": { "@babel/core": "^7.23.7", "@babel/parser": "^7.23.6", "@babel/traverse": "^7.23.7", "@babel/types": "^7.23.6" } }, "sha512-GERT7L2TiYcYDtYk1IpD+ASAYXjKbLTDPhBtYj7X1NuRMDTMtAx9kyBenub1Ev41lo91OHCKdmP+egTDmfQ7Ig=="],
-
-    "babel-plugin-react-compiler": ["babel-plugin-react-compiler@1.0.0", "", { "dependencies": { "@babel/types": "^7.26.0" } }, "sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw=="],
 
     "balanced-match": ["balanced-match@4.0.4", "", {}, "sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA=="],
 
@@ -992,6 +1025,8 @@
     "open": ["open@11.0.2", "", { "dependencies": { "default-browser": "^5.5.1", "define-lazy-prop": "^3.0.0", "is-in-ssh": "^1.0.0", "is-inside-container": "^1.0.0", "powershell-utils": "^0.2.1", "wsl-utils": "^1.0.0" } }, "sha512-RWqF+pBSkqecEvCKOn8QYhaNdRMJDZRIrlS/7rTDdLHaPcfXGCZ/h8zb413NfvdeAV0MR7T1yJcA34/q+CSm1Q=="],
 
     "ora": ["ora@8.2.0", "", { "dependencies": { "chalk": "^5.3.0", "cli-cursor": "^5.0.0", "cli-spinners": "^2.9.2", "is-interactive": "^2.0.0", "is-unicode-supported": "^2.0.0", "log-symbols": "^6.0.0", "stdin-discarder": "^0.2.2", "string-width": "^7.2.0", "strip-ansi": "^7.1.0" } }, "sha512-weP+BZ8MVNnlCm8c0Qdc1WSWq4Qn7I+9CJGm7Qali6g44e/PUzbjNqJX5NJ9ljlNMosfJvg1fKEGILklK9cwnw=="],
+
+    "oxc-transform-react": ["oxc-transform-react@0.149.0", "", { "optionalDependencies": { "@oxc-transform-react/binding-android-arm-eabi": "0.149.0", "@oxc-transform-react/binding-android-arm64": "0.149.0", "@oxc-transform-react/binding-darwin-arm64": "0.149.0", "@oxc-transform-react/binding-darwin-x64": "0.149.0", "@oxc-transform-react/binding-freebsd-x64": "0.149.0", "@oxc-transform-react/binding-linux-arm-gnueabihf": "0.149.0", "@oxc-transform-react/binding-linux-arm-musleabihf": "0.149.0", "@oxc-transform-react/binding-linux-arm64-gnu": "0.149.0", "@oxc-transform-react/binding-linux-arm64-musl": "0.149.0", "@oxc-transform-react/binding-linux-ppc64-gnu": "0.149.0", "@oxc-transform-react/binding-linux-riscv64-gnu": "0.149.0", "@oxc-transform-react/binding-linux-riscv64-musl": "0.149.0", "@oxc-transform-react/binding-linux-s390x-gnu": "0.149.0", "@oxc-transform-react/binding-linux-x64-gnu": "0.149.0", "@oxc-transform-react/binding-linux-x64-musl": "0.149.0", "@oxc-transform-react/binding-openharmony-arm64": "0.149.0", "@oxc-transform-react/binding-win32-arm64-msvc": "0.149.0", "@oxc-transform-react/binding-win32-ia32-msvc": "0.149.0", "@oxc-transform-react/binding-win32-x64-msvc": "0.149.0" } }, "sha512-ab3dxcPtkDSfIR9tNdxHUtmpdL0lhHndsBD9IUAU5BxtJtwGG/85NnRzs2f2KwouNkHl7caSswMLQeUvw3FERw=="],
 
     "p-limit": ["p-limit@2.3.0", "", { "dependencies": { "p-try": "^2.0.0" } }, "sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w=="],
 

@@ -43,6 +43,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard.ts";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
 import { getUrl, isAPNG, removeExif } from "@/lib/utils.ts";
@@ -331,6 +332,9 @@ function FileUploader() {
 			document.removeEventListener("paste", onPaste);
 		};
 	}, []);
+
+	const { copy } = useCopyToClipboard();
+
 	// Function to handle file upload to server
 	const uploadFileToServer = async (file: FileWithPreview): Promise<Item> => {
 		if (window.umami) {
@@ -385,6 +389,10 @@ function FileUploader() {
 						setItems((prev) => [response, ...prev]);
 						handleFileRemoved(file.file.name);
 						removeFile(file.id);
+						copy(`${getUrl()}/${response.id}.${response.ext}`)
+							.then(() => toast.success("Ссылка скопирована в буфер обмена"))
+							.catch(() => toast.error("Ошибка при сохранении в буфер обмена"));
+
 						resolve(response);
 					} else {
 						// Handle error
@@ -408,6 +416,7 @@ function FileUploader() {
 								: item,
 						),
 					);
+					toast.error("Ошибка при загрузке файла");
 					reject(new Error("Network error"));
 				});
 

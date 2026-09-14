@@ -1,4 +1,8 @@
-export { cn } from "cn";
+import { createCn } from "cn/engine";
+
+import tables from "./cn-tables";
+
+export const cn = createCn(tables);
 
 export function getUrl() {
 	const base = (() => {

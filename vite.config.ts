@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { cn } from "cn/vite";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
@@ -12,6 +13,7 @@ const config = defineConfig({
 	},
 	plugins: [
 		tailwindcss(),
+		cn({ content: ["src/**/*.{ts,tsx}"], out: "src/lib/cn-tables.ts" }),
 		tanstackStart({
 			pages: [
 				{

@@ -69,7 +69,7 @@ export const Route = createFileRoute("/api/file/$")({
 					seed: fileKey,
 					join: "",
 					min: 2,
-					max: 4,
+					max: 3,
 					formatter: (word) =>
 						word.slice(0, 1).toUpperCase().concat(word.slice(1)),
 				});

@@ -12,8 +12,8 @@ export const Route = createFileRoute("/api/file/$key")({
 				const file = await db.file.findUnique({
 					where: { key },
 				});
-				console.log("key", key);
-				console.log("file", file);
+				// console.log("key", key);
+				// console.log("file", file);
 				if (!file) {
 					return Response.json(
 						{

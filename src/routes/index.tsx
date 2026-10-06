@@ -313,7 +313,7 @@ function FileUploader() {
 	const setItems = useSetAtom(itemsAtom);
 	// State to track upload progress for each file
 	const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
-	console.log("Upload progress:", uploadProgress);
+	// console.log("Upload progress:", uploadProgress);
 	const onPaste = useEffectEvent((e: ClipboardEvent) => {
 		if (!e.clipboardData?.files.length) {
 			return;
@@ -348,18 +348,18 @@ function FileUploader() {
 				const formData = new FormData();
 				formData.append("file", file.file as File);
 				formData.append("type", file.file.type);
-				console.log("Uploading file:", file.file.name);
+				// console.log("Uploading file:", file.file.name);
 				// Create XMLHttpRequest to track progress
 				const xhr = new XMLHttpRequest();
 
 				// Track upload progress
 				xhr.upload.addEventListener("progress", (event) => {
-					console.log("Progress:", event.loaded, "/", event.total);
+					// console.log("Progress:", event.loaded, "/", event.total);
 					if (event.lengthComputable) {
 						const progressPercent = Math.round(
 							(event.loaded / event.total) * 100,
 						);
-						console.log("Progress:", progressPercent);
+						// console.log("Progress:", progressPercent);
 						// Update progress state for this file
 						setUploadProgress((prev) =>
 							prev.map((item) =>
@@ -385,7 +385,7 @@ function FileUploader() {
 									: item,
 							),
 						);
-						console.log("Upload completed:", response);
+						// console.log("Upload completed:", response);
 						setItems((prev) => [response, ...prev]);
 						handleFileRemoved(file.file.name);
 						removeFile(file.id);
@@ -453,7 +453,7 @@ function FileUploader() {
 				}
 				uploadFileToServer(file)
 					.then((response) => {
-						console.log("Upload successful:", response);
+						// console.log("Upload successful:", response);
 					})
 					.catch((error) => {
 						console.error("Upload failed:", error);
@@ -540,8 +540,8 @@ function FileUploader() {
 											(p) => p.fileId === file.file.name,
 										);
 										const isUploading = fileProgress && !fileProgress.completed;
-										console.log("fileProgress:", fileProgress);
-										console.log("isUploading:", isUploading);
+										// console.log("fileProgress:", fileProgress);
+										// console.log("isUploading:", isUploading);
 										return (
 											<motion.div
 												animate={{ opacity: 1 }}

@@ -44,7 +44,7 @@ export const Route = createFileRoute("/$id")({
 				const url = await getSignedUrl(s3, getObjectCommand, {
 					expiresIn: 604800,
 				});
-				console.log({ key: file.key, success: url });
+				// console.log({ key: file.key, success: url });
 				return Response.redirect(url);
 			},
 		},

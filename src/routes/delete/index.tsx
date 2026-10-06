@@ -43,9 +43,9 @@ export const Route = createFileRoute("/delete/")({
 	validateSearch: deleteFileSearchSchema,
 	loader: async ({ deps: { key } }) => {
 		try {
-			console.log("key", key);
+			// console.log("key", key);
 			const file = await getFile({ data: { key } });
-			console.log("file", file);
+			// console.log("file", file);
 			return file;
 		} catch (error) {
 			console.error(error);

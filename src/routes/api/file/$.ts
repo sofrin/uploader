@@ -3,15 +3,22 @@ import { s3 } from "bun";
 import { createFileRoute } from "@tanstack/react-router";
 import mime from "mime-types";
 import { customAlphabet, nanoid } from "nanoid";
+import { generate } from "random-words";
 
 import { db } from "@/lib/prisma.ts";
 import { getUrl } from "@/lib/utils.ts";
 
 const maxFileSize = 1048576 * 100;
-const genId = customAlphabet(
-	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	6,
-);
+// const genId = customAlphabet(
+// 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+// 	6,
+// );
+
+// const genId2 = generate({
+// 	min: 2,
+// 	max: 3,
+// 	formatter: (word) => word.slice(0, 1).toUpperCase().concat(word.slice(1)),
+// });
 export const Route = createFileRoute("/api/file/$")({
 	server: {
 		handlers: {
@@ -25,7 +32,7 @@ export const Route = createFileRoute("/api/file/$")({
 							? mime.lookup(file.name) || "image/png"
 							: "image/png";
 
-				console.log("fileType", fileType);
+				// console.log("fileType", fileType);
 				if (!(file instanceof File))
 					return Response.json(
 						{ reason: "Invalid file", status: "failure" },
@@ -57,7 +64,16 @@ export const Route = createFileRoute("/api/file/$")({
 					type: fileType,
 				});
 
-				const fileId = genId();
+				// const fileId = genId();
+				const fileId = generate({
+					seed: fileKey,
+					join: "",
+					min: 2,
+					max: 4,
+					formatter: (word) =>
+						word.slice(0, 1).toUpperCase().concat(word.slice(1)),
+				});
+
 				await db.file
 					.create({
 						data: {

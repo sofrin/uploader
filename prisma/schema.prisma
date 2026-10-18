@@ -9,9 +9,9 @@ generator client {
 
   }
 
-datasource db {
-  provider = "sqlite"
-}
+  datasource db {
+    provider = "postgresql"
+  }
 
 model File {
   id        String   @id

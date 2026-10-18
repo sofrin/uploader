@@ -1,11 +1,11 @@
 import "dotenv/config";
 
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../../generated/prisma/client.ts";
 
-const adapter = new PrismaLibSql({
-	url: process.env.DATABASE_URL ?? "",
+const adapter = new PrismaPg({
+	connectionString: process.env.DATABASE_URL,
 });
 
 declare global {
@@ -13,8 +13,6 @@ declare global {
 }
 
 export const db = globalThis.__prisma || new PrismaClient({ adapter });
-
-await db.$queryRaw`PRAGMA journal_mode = WAL`;
 
 if (process.env.NODE_ENV !== "production") {
 	globalThis.__prisma = db;

@@ -8,7 +8,7 @@ import { generate } from "random-words";
 import { db } from "@/lib/prisma.ts";
 import { getUrl } from "@/lib/utils.ts";
 
-const maxFileSize = 1048576 * 100;
+const maxFileSize = 1048576 * 4.5;
 // const genId = customAlphabet(
 // 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
 // 	6,

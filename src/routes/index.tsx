@@ -309,7 +309,7 @@ function SavedFiles() {
 }
 
 function FileUploader() {
-	const maxSize = 100 * 1024 * 1024; // 100MB
+	const maxSize = 4.5 * 1024 * 1024; // 4.5MB
 	const setItems = useSetAtom(itemsAtom);
 	// State to track upload progress for each file
 	const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);

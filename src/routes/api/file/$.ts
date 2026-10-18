@@ -54,7 +54,7 @@ export const Route = createFileRoute("/api/file/$")({
 				}
 
 				const fileKey = nanoid();
-				s3.write(fileKey, file, {
+				await s3.write(fileKey, file, {
 					accessKeyId: process.env.S3_ACCESS_KEY_ID!,
 					bucket: process.env.S3_BUCKET,
 					contentDisposition: `inline; filename=${file.name}`,

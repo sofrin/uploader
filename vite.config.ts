@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { cn } from "cn/vite";
+import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
@@ -30,6 +31,7 @@ const config = defineConfig({
 			// 	enabled: true,
 			// },
 		}),
+		nitro(),
 		viteReact({ compiler: true }),
 	],
 	preview: {

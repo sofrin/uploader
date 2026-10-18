@@ -630,7 +630,7 @@ function FileUploader() {
 								Перетащите файлы сюда
 							</p>
 							<p className="text-muted-foreground text-xs">
-								Максимум 10 ∙ До 100 MB
+								Максимум 10 ∙ До 4.5 MB
 							</p>
 							<Button
 								className="mt-4"

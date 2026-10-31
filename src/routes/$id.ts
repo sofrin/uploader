@@ -11,6 +11,7 @@ export const s3 = new S3Client({
 	},
 	endpoint: process.env.S3_ENDPOINT!,
 	region: process.env.S3_REGION!,
+	forcePathStyle: true,
 	requestChecksumCalculation: "WHEN_REQUIRED",
 });
 
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/$id")({
 					);
 				}
 				const getObjectCommand = new GetObjectCommand({
-					Bucket: process.env.S3_BUCKET_DOMAIN,
+					Bucket: process.env.S3_BUCKET,
 					Key: file.key,
 					ResponseCacheControl: "public, max-age=31536000, immutable",
 					ResponseContentDisposition: `inline; filename=${file.name}`,

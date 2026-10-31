@@ -309,7 +309,7 @@ function SavedFiles() {
 }
 
 function FileUploader() {
-	const maxSize = 4.5 * 1024 * 1024; // 4.5MB
+	const maxSize = 100 * 1024 * 1024; // 100MB
 	const setItems = useSetAtom(itemsAtom);
 	// State to track upload progress for each file
 	const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
@@ -340,16 +340,27 @@ function FileUploader() {
 		if (window.umami) {
 			void umami.track("file upload");
 		}
+		const formData = new FormData();
+		formData.append("type", file.file.type);
+		formData.append("name", file.file.name);
+		formData.append("size", file.file.size.toString());
+
+		const response = await fetch(`${getUrl()}/api/file/`, {
+			method: "PUT",
+			body: formData,
+		});
+		const result = (await response.json()) as Item & {
+			status: "success";
+			uploadUrl: string;
+		};
+		console.log(" URL result", result);
 		// TODO: make this optional setting bc breaks some files
 		const strippedFile = await removeExif(file.file as File);
 		return new Promise((resolve, reject) => {
 			try {
-				// Create FormData
-				const formData = new FormData();
-				formData.append("file", file.file as File);
-				formData.append("type", file.file.type);
-				// console.log("Uploading file:", file.file.name);
-				// Create XMLHttpRequest to track progress
+				// Upload with XMLHttpRequest to track upload progress.
+				// The presigned uploadUrl is created for a PUT request (PutObjectCommand),
+				// so the method and Content-Type must match what the server signed.
 				const xhr = new XMLHttpRequest();
 
 				// Track upload progress
@@ -374,9 +385,9 @@ function FileUploader() {
 				// Handle completion
 				xhr.addEventListener("load", () => {
 					if (xhr.status >= 200 && xhr.status < 300) {
-						const response = JSON.parse(xhr.responseText) as Item & {
-							status: "success";
-						};
+						// const response = JSON.parse(xhr.responseText) as {
+						// 	status: "success";
+						// };
 						// Mark as completed
 						setUploadProgress((prev) =>
 							prev.map((item) =>
@@ -386,14 +397,23 @@ function FileUploader() {
 							),
 						);
 						// console.log("Upload completed:", response);
-						setItems((prev) => [response, ...prev]);
+						const item = {
+							date: result.date,
+							ext: result.ext,
+							id: result.id,
+							key: result.key,
+							name: result.name,
+							size: result.size,
+							type: result.type,
+						} as Item;
+						setItems((prev) => [item, ...prev]);
 						handleFileRemoved(file.file.name);
 						removeFile(file.id);
-						copy(`${getUrl()}/${response.id}.${response.ext}`)
+						copy(`${getUrl()}/${result.id}.${result.ext}`)
 							.then(() => toast.success("Ссылка скопирована в буфер обмена"))
 							.catch(() => toast.error("Ошибка при сохранении в буфер обмена"));
 
-						resolve(response);
+						resolve(item);
 					} else {
 						// Handle error
 						setUploadProgress((prev) =>
@@ -420,9 +440,9 @@ function FileUploader() {
 					reject(new Error("Network error"));
 				});
 
-				// Open and send the request
-				xhr.open("POST", "/api/file/", true);
-				xhr.send(formData);
+				xhr.open("PUT", result.uploadUrl, true);
+				xhr.setRequestHeader("Content-Type", result.type);
+				xhr.send(file.file as File);
 			} catch (error) {
 				reject(error);
 			}
@@ -630,7 +650,7 @@ function FileUploader() {
 								Перетащите файлы сюда
 							</p>
 							<p className="text-muted-foreground text-xs">
-								Максимум 10 ∙ До 4.5 MB
+								Максимум 10 ∙ До 100 MB
 							</p>
 							<Button
 								className="mt-4"

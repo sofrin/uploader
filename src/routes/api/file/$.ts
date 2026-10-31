@@ -1,5 +1,5 @@
-import { s3 } from "bun";
-
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createFileRoute } from "@tanstack/react-router";
 import mime from "mime-types";
 import { customAlphabet, nanoid } from "nanoid";
@@ -8,7 +8,9 @@ import { generate } from "random-words";
 import { db } from "@/lib/prisma.ts";
 import { getUrl } from "@/lib/utils.ts";
 
-const maxFileSize = 1048576 * 4.5;
+import { s3 } from "../../$id.ts";
+
+const maxFileSize = 1048576 * 100;
 // const genId = customAlphabet(
 // 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
 // 	6,
@@ -54,15 +56,21 @@ export const Route = createFileRoute("/api/file/$")({
 				}
 
 				const fileKey = nanoid();
-				await s3.write(fileKey, file, {
-					accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-					bucket: process.env.S3_BUCKET,
-					contentDisposition: `inline; filename=${file.name}`,
-					endpoint: process.env.S3_ENDPOINT!,
-					region: process.env.S3_REGION!,
-					secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
-					type: fileType,
+				const command = new PutObjectCommand({
+					Bucket: process.env.S3_BUCKET,
+					Key: fileKey,
+					ContentType: fileType,
 				});
+				const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+				// await s3.write(fileKey, file, {
+				// 	accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+				// 	bucket: process.env.S3_BUCKET,
+				// 	contentDisposition: `inline; filename=${file.name}`,
+				// 	endpoint: process.env.S3_ENDPOINT!,
+				// 	region: process.env.S3_REGION!,
+				// 	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+				// 	type: fileType,
+				// });
 
 				// const fileId = genId();
 				const fileId = generate({
@@ -101,11 +109,132 @@ export const Route = createFileRoute("/api/file/$")({
 						size: file.size,
 						status: "success",
 						type: fileType,
+						uploadUrl: uploadUrl,
 					},
 					{
 						status: 200,
 					},
 				);
+				//     return Response.json(
+				// 	{
+				// 		date: new Date().toISOString(),
+				// 		delete: `${getUrl()}/delete?key=${fileKey}`,
+				// 		ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
+				// 		id: fileId,
+				// 		key: fileKey,
+				// 		link: `${getUrl()}/${fileId}`,
+				// 		name: file.name,
+				// 		size: file.size,
+				// 		status: "success",
+				// 		type: fileType,
+				// 	},
+				// 	{
+				// 		status: 200,
+				// 	},
+				// );
+			},
+			PUT: async ({ request }) => {
+				const data = await request.formData();
+				// const file = data.get("file") as File;
+				const fileName = data.get("name")?.toString() ?? "";
+				const fileSize = Number(data.get("size")?.toString() ?? "");
+
+				const fileType =
+					data.get("type")?.toString() !== ""
+						? mime.lookup(fileName) || "image/png"
+						: "image/png";
+
+				// console.log("fileType", fileType);
+
+				if (fileSize > maxFileSize) {
+					return Response.json(
+						{
+							reason: "File size too large",
+							status: "failure",
+						},
+						{
+							status: 400,
+						},
+					);
+				}
+
+				const fileKey = nanoid();
+				const command = new PutObjectCommand({
+					Bucket: process.env.S3_BUCKET,
+					Key: fileKey,
+					ContentType: fileType,
+				});
+				const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+				// await s3.write(fileKey, file, {
+				// 	accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+				// 	bucket: process.env.S3_BUCKET,
+				// 	contentDisposition: `inline; filename=${file.name}`,
+				// 	endpoint: process.env.S3_ENDPOINT!,
+				// 	region: process.env.S3_REGION!,
+				// 	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+				// 	type: fileType,
+				// });
+
+				// const fileId = genId();
+				const fileId = generate({
+					seed: fileKey,
+					join: "",
+					min: 2,
+					max: 3,
+					formatter: (word) =>
+						word.slice(0, 1).toUpperCase().concat(word.slice(1)),
+				});
+
+				await db.file
+					.create({
+						data: {
+							createdAt: new Date().toISOString(),
+							ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
+							id: fileId,
+							key: fileKey,
+							name: fileName,
+							size: fileSize,
+							type: fileType,
+						},
+					})
+					.catch((err) => {
+						console.error("Error saving file info to db", err);
+					});
+				return Response.json(
+					{
+						date: new Date().toISOString(),
+						delete: `${getUrl()}/delete?key=${fileKey}`,
+						ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
+						id: fileId,
+						key: fileKey,
+						link: `${getUrl()}/${fileId}`,
+						name: fileName,
+						size: fileSize,
+						status: "success",
+						type: fileType,
+						uploadUrl: uploadUrl,
+					},
+					{
+						status: 200,
+					},
+				);
+				//     return Response.json(
+				// 	{
+				// 		date: new Date().toISOString(),
+				// 		delete: `${getUrl()}/delete?key=${fileKey}`,
+				// 		ext: fileType ? fileType.split("/")[1].split("+")[0] : "png",
+				// 		id: fileId,
+				// 		key: fileKey,
+				// 		link: `${getUrl()}/${fileId}`,
+				// 		name: file.name,
+				// 		size: file.size,
+				// 		status: "success",
+				// 		type: fileType,
+				// 	},
+				// 	{
+				// 		status: 200,
+				// 	},
+				// );
 			},
 		},
 	},

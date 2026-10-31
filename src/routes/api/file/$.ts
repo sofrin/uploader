@@ -27,12 +27,15 @@ export const Route = createFileRoute("/api/file/$")({
 			POST: async ({ request }) => {
 				const data = await request.formData();
 				const file = data.get("file") as File;
+				// Strip MIME parameters such as ";charset=utf-8" so bucket metadata,
+				// db records and the Content-Type the client sends for the presigned
+				// PUT all match exactly.
 				const fileType =
-					file.type !== ""
-						? file.type
-						: data.get("type")?.toString() !== ""
-							? mime.lookup(file.name) || "image/png"
-							: "image/png";
+					file.type.split(";")[0].trim() !== ""
+						? file.type.split(";")[0].trim()
+						: data.get("type")?.toString().split(";")[0].trim() !== ""
+							? data.get("type")!.toString().split(";")[0].trim()
+							: mime.lookup(file.name) || "image/png";
 
 				// console.log("fileType", fileType);
 				if (!(file instanceof File))
@@ -56,6 +59,33 @@ export const Route = createFileRoute("/api/file/$")({
 				}
 
 				const fileKey = nanoid();
+				// ShareX (and other single-shot API clients) use this endpoint as a
+				// classic uploader: one POST, parse the JSON response, done. They never
+				// follow an uploadUrl, so the file we just received must be written to
+				// S3 here. The two-step presigned flow (uploadUrl) remains available
+				// for the web client.
+				const Body = new Uint8Array(await file.arrayBuffer());
+				try {
+					await s3.send(
+						new PutObjectCommand({
+							Bucket: process.env.S3_BUCKET,
+							Key: fileKey,
+							ContentType: fileType,
+							Body,
+						}),
+					);
+				} catch (err) {
+					console.error("S3 upload failed", err);
+					return Response.json(
+						{
+							reason: "Failed to upload file to storage",
+							status: "failure",
+						},
+						{
+							status: 502,
+						},
+					);
+				}
 				const command = new PutObjectCommand({
 					Bucket: process.env.S3_BUCKET,
 					Key: fileKey,
@@ -139,10 +169,27 @@ export const Route = createFileRoute("/api/file/$")({
 				const fileName = data.get("name")?.toString() ?? "";
 				const fileSize = Number(data.get("size")?.toString() ?? "");
 
+				if (!Number.isFinite(fileSize) || fileSize < 0) {
+					return Response.json(
+						{
+							reason: "Invalid file size",
+							status: "failure",
+						},
+						{
+							status: 400,
+						},
+					);
+				}
+
+				// Prefer the explicit type sent by the client (the real file.type),
+				// fall back to a guess based on the filename. Strip MIME parameters
+				// like ";charset=utf-8" so the bucket metadata, db record and the
+				// Content-Type header the client sends for the presigned PUT all match.
+				const providedType = data.get("type")?.toString() ?? "";
 				const fileType =
-					data.get("type")?.toString() !== ""
-						? mime.lookup(fileName) || "image/png"
-						: "image/png";
+					providedType.split(";")[0].trim() !== ""
+						? providedType.split(";")[0].trim()
+						: mime.lookup(fileName) || "image/png";
 
 				// console.log("fileType", fileType);
 

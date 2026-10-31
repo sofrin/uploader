@@ -46,7 +46,7 @@ import {
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard.ts";
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload.ts";
 import { itemsAtom } from "@/lib/store.tsx";
-import { getUrl, isAPNG, removeExif } from "@/lib/utils.ts";
+import { getUrl, isAPNG } from "@/lib/utils.ts";
 
 export const Route = createFileRoute("/")({ component: App, ssr: false });
 
@@ -350,12 +350,31 @@ function FileUploader() {
 			body: formData,
 		});
 		const result = (await response.json()) as Item & {
-			status: "success";
+			reason?: string;
+			status: "success" | "failure";
 			uploadUrl: string;
 		};
-		console.log(" URL result", result);
-		// TODO: make this optional setting bc breaks some files
-		const strippedFile = await removeExif(file.file as File);
+
+		// The API refuses to presign if metadata is invalid or the file is too
+		// large — surface that instead of trying to upload to `undefined`.
+		if (
+			response.ok === false ||
+			result.status !== "success" ||
+			!result.uploadUrl
+		) {
+			setUploadProgress((prev) =>
+				prev.map((item) =>
+					item.fileId === file.file.name
+						? { ...item, error: result.reason ?? "Upload failed" }
+						: item,
+				),
+			);
+			toast.error(result.reason ?? "Ошибка при загрузке файла");
+			throw new Error(result.reason ?? "API upload failed");
+		}
+
+		// TODO: optionally strip EXIF here before uploading (stripping breaks
+		// some files, so the original is uploaded for now)
 		return new Promise((resolve, reject) => {
 			try {
 				// Upload with XMLHttpRequest to track upload progress.
